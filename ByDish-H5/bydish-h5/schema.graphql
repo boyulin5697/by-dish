@@ -1,0 +1,24 @@
+type Menu {
+  id: String!
+  list: [String]
+  name: String
+  time: String
+  typeInt: Int
+}
+
+input MenuInput {
+  id: String
+}
+
+input MenuListInput {
+  name: String
+  pageNo: Int!
+  pageSize: Int!
+  time: String
+  typeInt: Int
+}
+
+type Query {
+  menu(input: MenuInput): Menu!
+  menuList(input: MenuListInput): [Menu]!
+}

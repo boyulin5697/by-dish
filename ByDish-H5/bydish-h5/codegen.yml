@@ -1,0 +1,18 @@
+overwrite: true
+schema: src/graphql/schmea.graphqls
+generates:
+    src/generates/graphql.tsx:
+        plugins:
+            - 'typescript'
+            - 'typescript-operations'
+            - 'typescript-react-apollo'
+        # hooks:
+        #     afterOneFileWrite:
+        #         - prettier --write
+    schema.graphql:
+        schema: ./graphql/schmea.graphqls
+        plugins:
+            - 'schema-ast'
+        # hooks:
+        #     afterOneFileWrite:
+        #         - prettier --write

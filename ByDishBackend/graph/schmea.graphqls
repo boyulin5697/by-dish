@@ -1,0 +1,49 @@
+type Menu{
+    id:String!,
+    time:String,
+    list:[String],
+    name:String,
+    typeInt:Int
+}
+
+type Dish{
+    id:String,
+    name:String!,
+    pic:String!,
+    freq: Int!,
+    intType: Int!,
+    description:String!,
+    avb:Int!
+}
+
+input MenuInput{
+    id:String
+}
+
+input DishInput{
+    id:String!,
+    name:String!,
+    pic:String!,
+    freq: Int!,
+    intType: Int!,
+    description:String!,
+    avb:Int!,
+    pageNo:Int!,
+    pageSize:Int!
+}
+
+input MenuListInput{
+    pageNo:Int!,
+    pageSize:Int!
+    name:String,
+    typeInt:Int,
+    time:String
+}
+
+
+type Query{
+    menu(input:MenuInput):Menu!
+    menuList(input:MenuListInput):[Menu]!
+    dish(input:DishInput):Dish!
+    dishList(input:DishInput):[Dish]!
+}
