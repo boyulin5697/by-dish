@@ -38,7 +38,15 @@ func FindMenu(id string) *model.Menu {
 	menu = menu.SearchForMenu(id)
 	var arr []string
 	var arrptr []*string
-	if menu.List != "" {
+	if menu == nil {
+		result := model.Menu{
+			ID:   *new(string),
+			Time: new(string),
+			List: arrptr,
+		}
+		return &result
+	}
+	if &menu.List != nil && menu.List != "" {
 		arr = strings.Split(menu.List, ",")
 	}
 	if len(arr) > 0 {

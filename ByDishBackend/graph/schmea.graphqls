@@ -3,7 +3,7 @@ type Menu{
     time:String,
     list:[String],
     name:String,
-    typeInt:Int
+    typeInt:Int,
 }
 
 type Dish{
@@ -21,15 +21,16 @@ input MenuInput{
 }
 
 input DishInput{
-    id:String!,
-    name:String!,
-    pic:String!,
-    freq: Int!,
-    intType: Int!,
-    description:String!,
-    avb:Int!,
-    pageNo:Int!,
-    pageSize:Int!
+    id:String,
+    name:String,
+    pic:String,
+    freq: Int,
+    intType: Int,
+    description:String,
+    avb:Int,
+    label:String,
+    pageNo:Int,
+    pageSize:Int
 }
 
 input MenuListInput{
@@ -40,10 +41,20 @@ input MenuListInput{
     time:String
 }
 
+type MutationResponse{
+    code:Int,
+    message:String
+}
+
 
 type Query{
     menu(input:MenuInput):Menu!
     menuList(input:MenuListInput):[Menu]!
     dish(input:DishInput):Dish!
     dishList(input:DishInput):[Dish]!
+}
+
+type Mutation{
+    addDish(input:DishInput):MutationResponse
+    updateDish(input:DishInput):MutationResponse
 }

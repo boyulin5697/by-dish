@@ -2,6 +2,29 @@
 
 package model
 
+type Dish struct {
+	ID          *string `json:"id,omitempty"`
+	Name        string  `json:"name"`
+	Pic         string  `json:"pic"`
+	Freq        int     `json:"freq"`
+	IntType     int     `json:"intType"`
+	Description string  `json:"description"`
+	Avb         int     `json:"avb"`
+}
+
+type DishInput struct {
+	ID          *string `json:"id,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Pic         *string `json:"pic,omitempty"`
+	Freq        *int    `json:"freq,omitempty"`
+	IntType     *int    `json:"intType,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Avb         *int    `json:"avb,omitempty"`
+	Label       *string `json:"label,omitempty"`
+	PageNo      *int    `json:"pageNo,omitempty"`
+	PageSize    *int    `json:"pageSize,omitempty"`
+}
+
 type Menu struct {
 	ID      string    `json:"id"`
 	Time    *string   `json:"time,omitempty"`
@@ -20,4 +43,9 @@ type MenuListInput struct {
 	Name     *string `json:"name,omitempty"`
 	TypeInt  *int    `json:"typeInt,omitempty"`
 	Time     *string `json:"time,omitempty"`
+}
+
+type MutationResponse struct {
+	Code    *int    `json:"code,omitempty"`
+	Message *string `json:"message,omitempty"`
 }

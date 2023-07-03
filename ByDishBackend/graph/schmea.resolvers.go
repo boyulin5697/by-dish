@@ -10,6 +10,25 @@ import (
 	"context"
 )
 
+// AddDish is the resolver for the addDish field.
+func (r *mutationResolver) AddDish(ctx context.Context, input *model.DishInput) (*model.MutationResponse, error) {
+	code := service.AddDish(input)
+	resp := "finished!"
+	return &model.MutationResponse{
+		Code: &code, Message: &resp,
+	}, nil
+}
+
+// UpdateDish is the resolver for the updateDish field.
+func (r *mutationResolver) UpdateDish(ctx context.Context, input *model.DishInput) (*model.MutationResponse, error) {
+	code := service.UpdateDish(input)
+	resp := "finished!"
+	return &model.MutationResponse{
+		Code: &code, Message: &resp,
+	}, nil
+
+}
+
 // Menu is the resolver for the menu field.
 func (r *queryResolver) Menu(ctx context.Context, input *model.MenuInput) (*model.Menu, error) {
 	return service.FindMenu(*input.ID), nil
@@ -20,7 +39,21 @@ func (r *queryResolver) MenuList(ctx context.Context, input *model.MenuListInput
 	return service.QueryMenu(input), nil
 }
 
+// Dish is the resolver for the dish field.
+func (r *queryResolver) Dish(ctx context.Context, input *model.DishInput) (*model.Dish, error) {
+	return service.SearchForDish(input), nil
+}
+
+// DishList is the resolver for the dishList field.
+func (r *queryResolver) DishList(ctx context.Context, input *model.DishInput) ([]*model.Dish, error) {
+	return service.SearchForDishList(input), nil
+}
+
+// Mutation returns MutationResolver implementation.
+func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
+
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

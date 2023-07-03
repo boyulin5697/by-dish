@@ -84,7 +84,7 @@ func SetupRouter() *gin.Engine {
 		context.JSON(http.StatusOK, respbody)
 	})
 
-	router.POST("/gql", graphqlHandler())
+	router.POST("/bydish/gql", graphqlHandler())
 	router.GET("/", playgroundHandler())
 
 	return router

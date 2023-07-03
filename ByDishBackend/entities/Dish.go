@@ -12,6 +12,7 @@ type Dish struct {
 	Type        int    `json:"type"`
 	Description string `json:"description"`
 	Avb         int    `json:"avb"`
+	Label       string `json:"label"`
 }
 
 func (Dish) TableName() string {
@@ -24,7 +25,16 @@ func (dish *Dish) AddDish() int {
 }
 
 func (dish *Dish) Save() int {
-	db.Db.Exec("UPDATE `dish` SET `id` = ? , `name` = ?, `pic` = ?, `freq` = ?;", dish.Id, dish.Name, dish.Pic, dish.Freq)
+	db.Db.Model(&dish).Updates(Dish{
+		Id:          dish.Id,
+		Name:        dish.Name,
+		Pic:         dish.Pic,
+		Freq:        dish.Freq,
+		Type:        dish.Type,
+		Description: dish.Description,
+		Avb:         dish.Avb,
+		Label:       dish.Label,
+	})
 	return 1
 }
 

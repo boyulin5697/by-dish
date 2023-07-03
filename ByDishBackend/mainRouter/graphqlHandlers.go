@@ -17,7 +17,7 @@ func graphqlHandler() gin.HandlerFunc {
 }
 
 func playgroundHandler() gin.HandlerFunc {
-	h := playground.Handler("GraphQL", "/gql")
+	h := playground.Handler("GraphQL", "/bydish/gql")
 
 	return func(c *gin.Context) {
 		h.ServeHTTP(c.Writer, c.Request)
