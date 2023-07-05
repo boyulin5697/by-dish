@@ -1,6 +1,9 @@
 package db
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+	"strconv"
+)
 
 func Paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
@@ -16,4 +19,12 @@ func Paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 		offset := (page - 1) * pageSize
 		return db.Offset(offset).Limit(pageSize)
 	}
+}
+
+func StrToNum(str string) int {
+	num, err := strconv.Atoi(str)
+	if err != nil {
+		panic(err)
+	}
+	return num
 }

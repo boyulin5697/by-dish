@@ -5,7 +5,7 @@ import (
 )
 
 type Dish struct {
-	Id          string `json:"id"`
+	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	Pic         string `json:"pic"`
 	Freq        int    `json:"freq"`
@@ -39,17 +39,17 @@ func (dish *Dish) Save() int {
 }
 
 func (dish *Dish) Delete(id string) int {
-	db.Db.Exec("DELETE FROM `dish` WHERE `id` = ?;", id)
+	db.Db.Exec("DELETE FROM `dish` WHERE `id` = ?;", db.StrToNum(id))
 	return 1
 }
 
 func (dish *Dish) find(id string) *Dish {
-	db.Db.Where(&Dish{Id: id}).First(&dish)
+	db.Db.Where(&Dish{Id: db.StrToNum(id)}).First(&dish)
 	return dish
 }
 
 func (dish *Dish) SearchForDish(id string) *Dish {
-	db.Db.Where(&Dish{Id: id}, &dish)
+	db.Db.Where(&Dish{Id: db.StrToNum(id)}, &dish)
 	return dish
 }
 
