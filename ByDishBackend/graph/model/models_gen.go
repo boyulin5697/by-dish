@@ -3,26 +3,27 @@
 package model
 
 type Dish struct {
-	ID          *string `json:"id,omitempty"`
-	Name        string  `json:"name"`
-	Pic         string  `json:"pic"`
-	Freq        int     `json:"freq"`
-	IntType     int     `json:"intType"`
-	Description string  `json:"description"`
-	Avb         int     `json:"avb"`
+	ID          string    `json:"id"`
+	Name        *string   `json:"name,omitempty"`
+	Pic         *string   `json:"pic,omitempty"`
+	Freq        *int      `json:"freq,omitempty"`
+	IntType     *int      `json:"intType,omitempty"`
+	Description *string   `json:"description,omitempty"`
+	Avb         *int      `json:"avb,omitempty"`
+	Label       []*string `json:"label,omitempty"`
 }
 
 type DishInput struct {
-	ID          *string `json:"id,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Pic         *string `json:"pic,omitempty"`
-	Freq        *int    `json:"freq,omitempty"`
-	IntType     *int    `json:"intType,omitempty"`
-	Description *string `json:"description,omitempty"`
-	Avb         *int    `json:"avb,omitempty"`
-	Label       *string `json:"label,omitempty"`
-	PageNo      *int    `json:"pageNo,omitempty"`
-	PageSize    *int    `json:"pageSize,omitempty"`
+	ID          *string   `json:"id,omitempty"`
+	Name        *string   `json:"name,omitempty"`
+	Pic         *string   `json:"pic,omitempty"`
+	Freq        *int      `json:"freq,omitempty"`
+	IntType     *int      `json:"intType,omitempty"`
+	Description *string   `json:"description,omitempty"`
+	Avb         *int      `json:"avb,omitempty"`
+	Label       []*string `json:"label,omitempty"`
+	PageNo      *int      `json:"pageNo,omitempty"`
+	PageSize    *int      `json:"pageSize,omitempty"`
 }
 
 type Menu struct {

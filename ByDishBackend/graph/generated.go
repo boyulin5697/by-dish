@@ -51,6 +51,7 @@ type ComplexityRoot struct {
 		Freq        func(childComplexity int) int
 		ID          func(childComplexity int) int
 		IntType     func(childComplexity int) int
+		Label       func(childComplexity int) int
 		Name        func(childComplexity int) int
 		Pic         func(childComplexity int) int
 	}
@@ -141,6 +142,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Dish.IntType(childComplexity), true
+
+	case "Dish.label":
+		if e.complexity.Dish.Label == nil {
+			break
+		}
+
+		return e.complexity.Dish.Label(childComplexity), true
 
 	case "Dish.name":
 		if e.complexity.Dish.Name == nil {
@@ -568,11 +576,14 @@ func (ec *executionContext) _Dish_id(ctx context.Context, field graphql.Collecte
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Dish_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -609,14 +620,11 @@ func (ec *executionContext) _Dish_name(ctx context.Context, field graphql.Collec
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Dish_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -653,14 +661,11 @@ func (ec *executionContext) _Dish_pic(ctx context.Context, field graphql.Collect
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Dish_pic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -697,14 +702,11 @@ func (ec *executionContext) _Dish_freq(ctx context.Context, field graphql.Collec
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Dish_freq(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -741,14 +743,11 @@ func (ec *executionContext) _Dish_intType(ctx context.Context, field graphql.Col
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Dish_intType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -785,14 +784,11 @@ func (ec *executionContext) _Dish_description(ctx context.Context, field graphql
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Dish_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -829,14 +825,11 @@ func (ec *executionContext) _Dish_avb(ctx context.Context, field graphql.Collect
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Dish_avb(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -847,6 +840,47 @@ func (ec *executionContext) fieldContext_Dish_avb(ctx context.Context, field gra
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Dish_label(ctx context.Context, field graphql.CollectedField, obj *model.Dish) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Dish_label(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Label, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*string)
+	fc.Result = res
+	return ec.marshalOString2ᚕᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Dish_label(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Dish",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1445,6 +1479,8 @@ func (ec *executionContext) fieldContext_Query_dish(ctx context.Context, field g
 				return ec.fieldContext_Dish_description(ctx, field)
 			case "avb":
 				return ec.fieldContext_Dish_avb(ctx, field)
+			case "label":
+				return ec.fieldContext_Dish_label(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Dish", field.Name)
 		},
@@ -1516,6 +1552,8 @@ func (ec *executionContext) fieldContext_Query_dishList(ctx context.Context, fie
 				return ec.fieldContext_Dish_description(ctx, field)
 			case "avb":
 				return ec.fieldContext_Dish_avb(ctx, field)
+			case "label":
+				return ec.fieldContext_Dish_label(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Dish", field.Name)
 		},
@@ -3517,7 +3555,7 @@ func (ec *executionContext) unmarshalInputDishInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("label"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalOString2ᚕᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3661,36 +3699,23 @@ func (ec *executionContext) _Dish(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = graphql.MarshalString("Dish")
 		case "id":
 			out.Values[i] = ec._Dish_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "name":
 			out.Values[i] = ec._Dish_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "pic":
 			out.Values[i] = ec._Dish_pic(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "freq":
 			out.Values[i] = ec._Dish_freq(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "intType":
 			out.Values[i] = ec._Dish_intType(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "description":
 			out.Values[i] = ec._Dish_description(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "avb":
 			out.Values[i] = ec._Dish_avb(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
+		case "label":
+			out.Values[i] = ec._Dish_label(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

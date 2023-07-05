@@ -7,13 +7,14 @@ type Menu{
 }
 
 type Dish{
-    id:String,
-    name:String!,
-    pic:String!,
-    freq: Int!,
-    intType: Int!,
-    description:String!,
-    avb:Int!
+    id:String!,
+    name:String,
+    pic:String,
+    freq: Int,
+    intType: Int,
+    description:String,
+    avb:Int,
+    label:[String]
 }
 
 input MenuInput{
@@ -28,7 +29,7 @@ input DishInput{
     intType: Int,
     description:String,
     avb:Int,
-    label:String,
+    label:[String],
     pageNo:Int,
     pageSize:Int
 }
