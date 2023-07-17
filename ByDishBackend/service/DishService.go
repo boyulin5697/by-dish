@@ -4,7 +4,6 @@ import (
 	"ByDishBackend/db"
 	"ByDishBackend/entities"
 	"ByDishBackend/graph/model"
-	"strings"
 )
 
 func AddDish(dish *model.DishInput) int {
@@ -31,7 +30,7 @@ func AddDish(dish *model.DishInput) int {
 		Freq:        *dish.Freq,
 		Description: *dish.Description,
 		Avb:         *dish.Avb,
-		Label:       arrToLabelStr(dish.Label),
+		Label:       db.ArrToStr(dish.Label),
 	}
 
 	return newdish.AddDish()
@@ -60,7 +59,7 @@ func SearchForDish(dishIn *model.DishInput) *model.Dish {
 		Freq:        &dish.Freq,
 		Description: &dish.Description,
 		Avb:         &dish.Avb,
-		Label:       labelStrToArr(dish.Label),
+		Label:       db.StrToArr(dish.Label),
 	}
 	return &result
 }
@@ -121,33 +120,40 @@ func SearchForDishList(dishIn *model.DishInput) []*model.Dish {
 	return resultList
 }
 
-// arrToLabelStr 获取标签字符串
-func arrToLabelStr(arr []*string) string {
-	var labelStr string
-	if arr != nil {
-		for i := 0; i < len(arr); i++ {
-			tmp := arr[0]
-			labelStr += *tmp
-			if i != len(arr)-1 {
-				labelStr += ","
+// DishObjList 获取dish相关obj和关联值
+func DishObjList(id *string) []*model.ObjValList {
+	if id != nil {
+		objs := getDishObjList(*id)
+		resultList := new([]*model.ObjValList)
+		if objs != nil {
+			for _, obj := range objs {
+				objVal := &model.ObjValList{
+					ObjID:   *obj,
+					ValList: getDishObj(*obj),
+				}
+				*resultList = append(*resultList, objVal)
 			}
 		}
+		return *resultList
 	} else {
-		labelStr = ""
+		return nil
 	}
-	return labelStr
 }
 
-// labelStrToArr 根据标签字符串获得数组
-func labelStrToArr(str string) []*string {
-	var arr []*string
-	var arrStr []string
-	arrStr = strings.Split(str, ",")
-	if len(arrStr) == 0 {
-		return arr
+func getDishObjList(id string) []*string {
+	var dish = new(entities.Dish)
+	dish = dish.SearchForDish(id)
+	if dish != nil {
+		objstr := dish.Objs
+		return db.StrToArr(objstr)
+	} else {
+		return nil
 	}
-	for i := range arrStr {
-		arr = append(arr, &arrStr[i])
-	}
-	return arr
+}
+
+// GetDishObj 获取dish相关对象数组
+func getDishObj(id string) []*model.ObjValContent {
+	var obj = new([]*model.ObjValContent)
+	db.Db.Raw("SELECT id Id, name Name, label Label, val Val FROM `v_obj_values` WHERE `id` = ?", id).Scan(&obj)
+	return *obj
 }

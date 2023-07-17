@@ -8,7 +8,13 @@ import (
 	"ByDishBackend/graph/model"
 	"ByDishBackend/service"
 	"context"
+	"fmt"
 )
+
+// AddMenu is the resolver for the addMenu field.
+func (r *mutationResolver) AddMenu(ctx context.Context, input *model.AddMenuInput) (*model.MutationResponse, error) {
+	panic(fmt.Errorf("not implemented: AddMenu - addMenu"))
+}
 
 // AddDish is the resolver for the addDish field.
 func (r *mutationResolver) AddDish(ctx context.Context, input *model.DishInput) (*model.MutationResponse, error) {
@@ -47,6 +53,11 @@ func (r *queryResolver) Dish(ctx context.Context, input *model.DishInput) (*mode
 // DishList is the resolver for the dishList field.
 func (r *queryResolver) DishList(ctx context.Context, input *model.DishInput) ([]*model.Dish, error) {
 	return service.SearchForDishList(input), nil
+}
+
+// DishObjList is the resolver for the dishObjList field.
+func (r *queryResolver) DishObjList(ctx context.Context, input *string) ([]*model.ObjValList, error) {
+	return service.DishObjList(input), nil
 }
 
 // Mutation returns MutationResolver implementation.

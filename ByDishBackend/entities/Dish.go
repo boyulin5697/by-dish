@@ -13,6 +13,7 @@ type Dish struct {
 	Description string `json:"description"`
 	Avb         int    `json:"avb"`
 	Label       string `json:"label"`
+	Objs        string `json:"objs"`
 }
 
 func (Dish) TableName() string {
@@ -34,6 +35,7 @@ func (dish *Dish) Save() int {
 		Description: dish.Description,
 		Avb:         dish.Avb,
 		Label:       dish.Label,
+		Objs:        dish.Objs,
 	})
 	return 1
 }

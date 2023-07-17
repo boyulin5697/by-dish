@@ -2,6 +2,11 @@
 
 package model
 
+type AddMenuInput struct {
+	Name     string         `json:"name"`
+	DishList []*DishObjsVal `json:"dishList"`
+}
+
 type Dish struct {
 	ID          string    `json:"id"`
 	Name        *string   `json:"name,omitempty"`
@@ -24,6 +29,11 @@ type DishInput struct {
 	Label       []*string `json:"label,omitempty"`
 	PageNo      *int      `json:"pageNo,omitempty"`
 	PageSize    *int      `json:"pageSize,omitempty"`
+}
+
+type DishObjsVal struct {
+	DishID string       `json:"dishId"`
+	ObjArr []*ObjValRel `json:"objArr"`
 }
 
 type Menu struct {
@@ -49,4 +59,20 @@ type MenuListInput struct {
 type MutationResponse struct {
 	Code    *int    `json:"code,omitempty"`
 	Message *string `json:"message,omitempty"`
+}
+
+type ObjValContent struct {
+	ValID string `json:"valId"`
+	Label string `json:"label"`
+	Val   int    `json:"val"`
+}
+
+type ObjValList struct {
+	ObjID   string           `json:"objId"`
+	ValList []*ObjValContent `json:"valList"`
+}
+
+type ObjValRel struct {
+	ObjID string `json:"objId"`
+	ValID string `json:"valId"`
 }

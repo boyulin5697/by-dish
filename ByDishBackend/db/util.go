@@ -3,6 +3,7 @@ package db
 import (
 	"github.com/jinzhu/gorm"
 	"strconv"
+	"strings"
 )
 
 // utils @author by. in 2023/7/5
@@ -47,4 +48,35 @@ func NumToStr(num int) string {
 func NumToStrPtr(num int) *string {
 	str := strconv.Itoa(num)
 	return &str
+}
+
+// ArrToStr 获取标签字符串
+func ArrToStr(arr []*string) string {
+	var labelStr string
+	if arr != nil {
+		for i := 0; i < len(arr); i++ {
+			tmp := arr[0]
+			labelStr += *tmp
+			if i != len(arr)-1 {
+				labelStr += ","
+			}
+		}
+	} else {
+		labelStr = ""
+	}
+	return labelStr
+}
+
+// StrToArr 根据标签字符串获得数组
+func StrToArr(str string) []*string {
+	var arr []*string
+	var arrStr []string
+	arrStr = strings.Split(str, ",")
+	if len(arrStr) == 0 {
+		return arr
+	}
+	for i := range arrStr {
+		arr = append(arr, &arrStr[i])
+	}
+	return arr
 }

@@ -17,9 +17,39 @@ type Dish{
     label:[String]
 }
 
+input DishObjsVal{
+    #dishID
+    dishId:String!,
+    # 对象编号
+    objArr:[ObjValRel]!
+}
+
+input ObjValRel{
+    objId:String!,
+    # 值编号
+    valId:String!
+}
+
+type ObjValList{
+    objId:String!,
+    valList:[ObjValContent]!
+}
+
+type ObjValContent{
+    valId:String!,
+    label:String!,
+    val:Int!
+}
+
 input MenuInput{
     id:String
 }
+
+input AddMenuInput{
+    name:String!,
+    dishList:[DishObjsVal]!
+}
+
 
 input DishInput{
     id:String,
@@ -33,6 +63,7 @@ input DishInput{
     pageNo:Int,
     pageSize:Int
 }
+
 
 input MenuListInput{
     pageNo:Int!,
@@ -49,13 +80,25 @@ type MutationResponse{
 
 
 type Query{
+    # 查询menu
     menu(input:MenuInput):Menu!
+    # 查询menu列表
     menuList(input:MenuListInput):[Menu]!
+    # 查询dish
     dish(input:DishInput):Dish!
+    # 查询dish列表
     dishList(input:DishInput):[Dish]!
+    # 获取dish相关的obj和关联列表
+    dishObjList(input:String):[ObjValList]!
+
+
 }
 
 type Mutation{
+    # 添加menu
+    addMenu(input:AddMenuInput):MutationResponse
+    # 添加dish
     addDish(input:DishInput):MutationResponse
+    # 更新dish
     updateDish(input:DishInput):MutationResponse
 }
