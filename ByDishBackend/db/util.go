@@ -55,7 +55,7 @@ func ArrToStr(arr []*string) string {
 	var labelStr string
 	if arr != nil {
 		for i := 0; i < len(arr); i++ {
-			tmp := arr[0]
+			tmp := arr[i]
 			labelStr += *tmp
 			if i != len(arr)-1 {
 				labelStr += ","

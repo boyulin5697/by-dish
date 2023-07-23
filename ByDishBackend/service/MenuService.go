@@ -1,6 +1,7 @@
 package service
 
 import (
+	"ByDishBackend/db"
 	"ByDishBackend/entities"
 	"ByDishBackend/graph/model"
 	"github.com/google/uuid"
@@ -39,40 +40,58 @@ func AddMenu(input *model.AddMenuInput) int {
 		}
 	}
 	menu := &entities.Menu{
-		idstr, time, dishStr, "", 0,
+		idstr, time, dishStr, input.Name, 0,
 	}
 
 	return menu.AddMenu()
 }
 
 func FindMenu(id string) *model.Menu {
-	var menu *entities.Menu
-	menu = menu.SearchForMenu(id)
-	var arr []string
-	var arrptr []*string
-	if menu == nil {
-		result := model.Menu{
-			ID:   *new(string),
-			Time: new(string),
-			List: *new([]*model.DishObj),
+	//var menuValList []*entities.MenuValueReceiver
+	//get menu
+	// mdoId, menuId, dishId, objId, content, menuName, menuTime, menuType, objName
+	menuValList := FindMenuObjValues(id)
+	result := new(model.Menu)
+	if menuValList != nil {
+		var molist []*model.TDishObjsVal
+		var dishObjMap map[string][]*model.TObjValRel
+		dishObjMap = make(map[string][]*model.TObjValRel)
+		for i := range menuValList {
+			if i == 0 {
+				result.ID = menuValList[i].Menuid
+				result.Name = &menuValList[i].Menuname
+				result.TypeInt = &menuValList[i].Menutype
+				timeStr := menuValList[i].Menutime.String()
+				result.Time = &timeStr
+			}
+			var label string
+			if menuValList[i].Objid != "1" {
+				label = entities.GetObjValLabel(menuValList[i].Content)
+			} else {
+				label = ""
+			}
+			moV := &model.TObjValRel{
+				ObjID:   menuValList[i].Objid,
+				ValID:   menuValList[i].Content,
+				Label:   &label,
+				ObjName: &menuValList[i].Objname,
+			}
+			var tObjValRels []*model.TObjValRel
+			tObjValRels = dishObjMap[menuValList[i].Dishid]
+			tObjValRels = append(tObjValRels, moV)
+			dishObjMap[menuValList[i].Dishid] = tObjValRels
+
 		}
-		return &result
-	}
-	if &menu.List != nil && menu.List != "" {
-		arr = strings.Split(menu.List, ",")
-	}
-	if len(arr) > 0 {
-		for i := 0; i < len(arr); i++ {
-			arrptr[i] = &arr[i]
+		for s := range dishObjMap {
+			mo := &model.TDishObjsVal{
+				DishID: s,
+				ObjArr: dishObjMap[s],
+			}
+			molist = append(molist, mo)
 		}
+		result.List = molist
 	}
-	timeStr := menu.Time.String()
-	result := model.Menu{
-		ID:   id,
-		Time: &timeStr,
-		List: arrptr,
-	}
-	return &result
+	return result
 }
 
 func DeleteMenu(id string) int {
@@ -112,26 +131,22 @@ func QueryMenu(input *model.MenuListInput) []*model.Menu {
 	menuList = menu.FindMenuList(input.PageNo, input.PageSize)
 
 	for _, value := range *menuList {
-		var arr []string
-		var arrptr []*string
-		if value.List != "" && &value.List != nil {
-			arr = strings.Split(value.List, ",")
-		}
-		if len(arr) > 0 {
-			for _, value := range arr {
-				arrptr = append(arrptr, &value)
-			}
-		}
-
-		timeStr := value.Time.String()
-
-		resultList = append(resultList, &model.Menu{
-			ID:      value.Id,
-			Name:    &value.Name,
-			TypeInt: &value.Type,
-			List:    arrptr,
-			Time:    &timeStr,
-		})
+		resultList = append(resultList, FindMenu(value.Id))
 	}
 	return resultList
+}
+
+// FindMenuObjValues 获取menu和对象属性相关信息
+func FindMenuObjValues(id string) []*entities.MenuValueReceiver {
+	var objVals []*entities.MenuValueReceiver
+	rows, _ := db.Db.Raw("SELECT mdo_id mdoid, menu_id menuid, dish_id dishid, obj_id objid, content, menu_time menutime, menu_type menutype, menu_name menuname, obj_name objname FROM `v_menu_values` WHERE `menu_id` = ?", id).Rows()
+	for rows.Next() {
+		var obj entities.MenuValueReceiver
+		err := db.Db.ScanRows(rows, &obj)
+		if err != nil {
+			return nil
+		}
+		objVals = append(objVals, &obj)
+	}
+	return objVals
 }

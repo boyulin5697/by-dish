@@ -1,6 +1,8 @@
 package main
 
 import (
+	"ByDishBackend/config"
+	"ByDishBackend/db"
 	"ByDishBackend/mainRouter"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
@@ -39,7 +41,7 @@ func main() {
 	success, err := client.RegisterInstance(vo.RegisterInstanceParam{
 		Ip:          "127.0.0.1",
 		Port:        8080,
-		ServiceName: "By-Dish",
+		ServiceName: "by-dish",
 		Weight:      10,
 		Enable:      true,
 		Healthy:     true,
@@ -51,6 +53,28 @@ func main() {
 		return
 	} else {
 		log.Print("[NACOS] CONNECT TO NACOS SUCCEEDED...")
+		configClient, err := clients.CreateConfigClient(map[string]interface{}{
+			"serverConfigs": serverConfigs,
+			"clientConfigs": clientConfig,
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+		content, err := configClient.GetConfig(vo.ConfigParam{
+			DataId: "by-dish",
+			Group:  "DEFAULT_GROUP",
+		})
+		log.Print("[NACOS] Config fetched: " + content)
+		config.SetConfig(content)
+		db.Init()
+		err = configClient.ListenConfig(vo.ConfigParam{
+			DataId: "by-dish",
+			Group:  "DEFAULT_GROUP",
+			OnChange: func(s string, group string, dataId string, data string) {
+				log.Print("[NACOS] Config " + dataId + " changed!")
+				config.SetConfig(data)
+			},
+		})
 	}
 	_ = router.Run()
 }

@@ -46,12 +46,12 @@ func (dish *Dish) Delete(id string) int {
 }
 
 func (dish *Dish) find(id string) *Dish {
-	db.Db.Where(&Dish{Id: db.StrToNum(id)}).First(&dish)
+	db.Db.First(dish, "id = ?", id)
 	return dish
 }
 
-func (dish *Dish) SearchForDish(id string) *Dish {
-	db.Db.Where(&Dish{Id: db.StrToNum(id)}, &dish)
+func (dish *Dish) SearchForDish() *Dish {
+	db.Db.Where(dish).First(dish)
 	return dish
 }
 

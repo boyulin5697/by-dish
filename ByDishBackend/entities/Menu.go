@@ -19,12 +19,24 @@ type MenuReceiver struct {
 	list string
 }
 
+type MenuValueReceiver struct {
+	Mdoid    string
+	Menuid   string
+	Dishid   string
+	Objid    string
+	Content  string
+	Menutime time.Time
+	Menutype int
+	Menuname string
+	Objname  string
+}
+
 func (Menu) TableName() string {
 	return "menu"
 }
 
 func (menu *Menu) AddMenu() int {
-	db.Db.Exec("INSERT INTO `menu` (`id`,`time`,`list`) VALUES (?,?,?);", menu.Id, menu.Time, menu.List)
+	db.Db.Create(menu)
 	return 1
 }
 
@@ -39,7 +51,7 @@ func (menu *Menu) Delete(id string) int {
 }
 
 func (menu *Menu) SearchForMenu(id string) *Menu {
-	db.Db.Where(&Menu{Id: id}, &menu)
+	db.Db.First(menu, "id = ?", id)
 	return menu
 }
 

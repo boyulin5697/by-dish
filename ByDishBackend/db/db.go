@@ -1,6 +1,7 @@
 package db
 
 import (
+	config2 "ByDishBackend/config"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -8,9 +9,10 @@ import (
 
 var Db *gorm.DB
 
-func init() {
+func Init() {
 	var err error
-	Db, err = gorm.Open("mysql", "by_dish:zGaLhKJmEzsy8eDM@tcp(120.26.84.76)/by_dish?charset=utf8&parseTime=true")
+	config := config2.GetDBConfig()
+	Db, err = gorm.Open(config.Dialect, config.ArgStr)
 	if err != nil {
 		log.Panicln("err:", err.Error())
 	}

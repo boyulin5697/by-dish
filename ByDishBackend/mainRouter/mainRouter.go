@@ -2,7 +2,6 @@ package mainRouter
 
 import (
 	"ByDishBackend/service"
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -13,27 +12,27 @@ import (
 // author by. created in May 2nd, 2023
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
-	router.POST("/menu", func(context *gin.Context) {
-		data, _ := context.GetRawData()
-		var body map[string][]string
-		_ = json.Unmarshal(data, &body)
-
-		list := body["list"]
-		status := service.AddMenu(list)
-		var respbody gin.H
-		if status == 0 {
-			respbody = gin.H{
-				"code":    500,
-				"message": "添加失败！",
-			}
-		} else {
-			respbody = gin.H{
-				"code":    200,
-				"message": "添加成功!",
-			}
-		}
-		context.JSON(http.StatusOK, respbody)
-	})
+	//router.POST("/menu", func(context *gin.Context) {
+	//	data, _ := context.GetRawData()
+	//	var body map[string][]string
+	//	_ = json.Unmarshal(data, &body)
+	//
+	//	list := body["list"]
+	//	status := service.AddMenu(list)
+	//	var respbody gin.H
+	//	if status == 0 {
+	//		respbody = gin.H{
+	//			"code":    500,
+	//			"message": "添加失败！",
+	//		}
+	//	} else {
+	//		respbody = gin.H{
+	//			"code":    200,
+	//			"message": "添加成功!",
+	//		}
+	//	}
+	//	context.JSON(http.StatusOK, respbody)
+	//})
 
 	router.GET("/menu", func(context *gin.Context) {
 		id := context.Query("id")

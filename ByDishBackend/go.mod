@@ -21,6 +21,7 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/nacos-group/nacos-sdk-go v1.1.4
 	github.com/vektah/gqlparser/v2 v2.5.3
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (

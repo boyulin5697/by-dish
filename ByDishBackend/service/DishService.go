@@ -23,6 +23,9 @@ func AddDish(dish *model.DishInput) int {
 		dish.Description = new(string)
 		*dish.Description = ""
 	}
+	if dish.Objs == nil {
+		return -1
+	}
 
 	newdish := &entities.Dish{
 		Name:        *dish.Name,
@@ -31,6 +34,7 @@ func AddDish(dish *model.DishInput) int {
 		Description: *dish.Description,
 		Avb:         *dish.Avb,
 		Label:       db.ArrToStr(dish.Label),
+		Objs:        db.ArrToStr(dish.Objs),
 	}
 
 	return newdish.AddDish()
@@ -50,8 +54,10 @@ func UpdateDish(dish *model.DishInput) int {
 }
 
 func SearchForDish(dishIn *model.DishInput) *model.Dish {
-	var dish *entities.Dish
-	dish = dish.SearchForDish(*dishIn.ID)
+	dish := entities.Dish{
+		Id: db.StrToNum(*dishIn.ID),
+	}
+	dish = *dish.SearchForDish()
 	result := model.Dish{
 		ID:          db.NumToStr(dish.Id),
 		Name:        &dish.Name,
@@ -123,7 +129,7 @@ func SearchForDishList(dishIn *model.DishInput) []*model.Dish {
 // DishObjList 获取dish相关obj和关联值
 func DishObjList(id *string) []*model.ObjValList {
 	if id != nil {
-		objs := getDishObjList(*id)
+		objs := GetDishObjList(*id)
 		resultList := new([]*model.ObjValList)
 		if objs != nil {
 			for _, obj := range objs {
@@ -140,9 +146,9 @@ func DishObjList(id *string) []*model.ObjValList {
 	}
 }
 
-func getDishObjList(id string) []*string {
-	var dish = new(entities.Dish)
-	dish = dish.SearchForDish(id)
+func GetDishObjList(id string) []*string {
+	dish := &entities.Dish{Id: db.StrToNum(id)}
+	dish = dish.SearchForDish()
 	if dish != nil {
 		objstr := dish.Objs
 		return db.StrToArr(objstr)
@@ -153,7 +159,22 @@ func getDishObjList(id string) []*string {
 
 // GetDishObj 获取dish相关对象数组
 func getDishObj(id string) []*model.ObjValContent {
-	var obj = new([]*model.ObjValContent)
-	db.Db.Raw("SELECT id Id, name Name, label Label, val Val FROM `v_obj_values` WHERE `id` = ?", id).Scan(&obj)
+	var obj []*model.ObjValContent
+	rows, _ := db.Db.Raw("SELECT val_id valid, name, label, val FROM `v_obj_values` WHERE `id` = ?", id).Rows()
+	for rows.Next() {
+		var objItem model.ObjValContent
+		err := db.Db.ScanRows(rows, &objItem)
+		if err != nil {
+			return nil
+		}
+		obj = append(obj, &objItem)
+	}
+	return obj
+}
+
+// GetDishObj 获取展示用菜品对象
+func getShowDishObj(id string) []*model.TObjValRel {
+	var obj = new([]*model.TObjValRel)
+	db.Db.Raw("SELECT val_id valID, id ObjId, name objName, label FROM `v_obj_values` WHERE `id` = ?", id).Scan(&obj)
 	return *obj
 }

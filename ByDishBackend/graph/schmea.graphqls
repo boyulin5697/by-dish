@@ -1,7 +1,7 @@
 type Menu{
     id:String!,
     time:String,
-    list:[String],
+    list:[TDishObjsVal],
     name:String,
     typeInt:Int,
 }
@@ -24,9 +24,21 @@ input DishObjsVal{
     objArr:[ObjValRel]!
 }
 
+type TDishObjsVal{
+    dishId:String!,
+    objArr:[TObjValRel]!
+}
+
 input ObjValRel{
     objId:String!,
     # 值编号
+    valId:String!
+}
+
+type TObjValRel{
+    objId:String!,
+    objName:String,
+    label:String,
     valId:String!
 }
 
@@ -36,7 +48,7 @@ type ObjValList{
 }
 
 type ObjValContent{
-    valId:String!,
+    valid:String!,
     label:String!,
     val:Int!
 }
@@ -61,7 +73,8 @@ input DishInput{
     avb:Int,
     label:[String],
     pageNo:Int,
-    pageSize:Int
+    pageSize:Int,
+    objs:[String]
 }
 
 
@@ -90,8 +103,8 @@ type Query{
     dishList(input:DishInput):[Dish]!
     # 获取dish相关的obj和关联列表
     dishObjList(input:String):[ObjValList]!
-
-
+    #查询obj和关联列表
+    objList:[ObjValContent]!
 }
 
 type Mutation{
