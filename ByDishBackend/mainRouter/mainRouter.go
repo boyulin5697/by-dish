@@ -12,38 +12,12 @@ import (
 // author by. created in May 2nd, 2023
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
-	//router.POST("/menu", func(context *gin.Context) {
-	//	data, _ := context.GetRawData()
-	//	var body map[string][]string
-	//	_ = json.Unmarshal(data, &body)
-	//
-	//	list := body["list"]
-	//	status := service.AddMenu(list)
-	//	var respbody gin.H
-	//	if status == 0 {
-	//		respbody = gin.H{
-	//			"code":    500,
-	//			"message": "添加失败！",
-	//		}
-	//	} else {
-	//		respbody = gin.H{
-	//			"code":    200,
-	//			"message": "添加成功!",
-	//		}
-	//	}
-	//	context.JSON(http.StatusOK, respbody)
-	//})
+	router.Use(CrosHandler())
 
 	router.GET("/menu", func(context *gin.Context) {
 		id := context.Query("id")
 		menu := service.FindMenu(id)
-		//jsonmenu, _ := json.Marshal(&menu)
 		context.PureJSON(http.StatusOK, &menu)
-		//context.JSON(http.StatusOK, gin.H{
-		//	"code":    200,
-		//	"message": "查找成功！",
-		//	"data":    jsonmenu,
-		//})
 	})
 
 	router.DELETE("/menu", func(context *gin.Context) {
@@ -83,7 +57,7 @@ func SetupRouter() *gin.Engine {
 		context.JSON(http.StatusOK, respbody)
 	})
 
-	router.POST("/bydish/gql", graphqlHandler())
+	router.Any("/bydish/gql", graphqlHandler())
 	router.GET("/bydish/playground", playgroundHandler())
 
 	return router
