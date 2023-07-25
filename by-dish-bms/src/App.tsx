@@ -1,8 +1,7 @@
-import { useRoutes } from 'react-router-dom';
 import './App.css';
-import { routers } from './router';
+import AppLayout from './pages/AppLayout';
 
 function App() {
-  return useRoutes(routers);
+  return <AppLayout/>
 }
 export default App;

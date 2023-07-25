@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Menu, TDishObjsVal } from './menu'
 import { useQuery } from '@apollo/client';
 import { QUERY_MENU_LIST } from '../../apis';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import BmsTable from '../../components/BmsTable';
-import { Alert } from 'antd';
+import NotAvailable from '../NotAvailable';
+import BmsSpinning from '../../components/BmsSpinning';
 
 /**
  * Menu 页面
@@ -72,14 +72,12 @@ export default function MenuList() {
                 setMenuData(data.menuList)
             }
         })
-        if (loading || error){
+        if(loading){
+            return <BmsSpinning/>
+        }
+        if (error){
             return (
-                <Alert
-                    message="Error"
-                    description="请求错误！"
-                    type="error"
-                    showIcon
-                />
+              <NotAvailable/>
             )
         }
 

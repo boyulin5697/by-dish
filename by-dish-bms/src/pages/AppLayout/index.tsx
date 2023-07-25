@@ -12,14 +12,16 @@ import {
   } from '@ant-design/pro-components';
   import { useState } from 'react';
   import defaultProps from './_defaultProps';
-  import { useRoutes } from 'react-router-dom';
+  import { Link, useRoutes } from 'react-router-dom';
+import { routers } from '../../router';
   
   export default function AppLayout(){
+    const router = useRoutes(routers)
     const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
       layout: 'side',
     });
   
-    const [pathname, setPathname] = useState('/list/sub-page/sub-sub-page1');
+    const [pathname, setPathname] = useState('/welcome');
   
     return (
       <div
@@ -67,25 +69,26 @@ import {
               <GithubFilled key="GithubFilled" />,
             ];
           }}
-          menuItemRender={(item, dom) => (
-            <div
-              onClick={() => {
-                setPathname(item.path || '/welcome');
-              }}
-            >
-              {dom}
-            </div>
-          )}
+          menuItemRender={(item, dom) => {
+             setPathname(item.path ?? '/welcome')
+             return( 
+                  <Link to={item.path ?? '/welcome'}>
+                    {dom}
+                  </Link>
+              )
+          }}
           {...settings}
         >
           <PageContainer>
             <ProCard
               style={{
-                height: '100vh',
-                minHeight: 800,
+                height: '90vh',
+                minHeight: 500,
               }}
             >
-              <div />
+              <div>
+                {router}
+              </div>
             </ProCard>
           </PageContainer>
         </ProLayout>

@@ -2,124 +2,49 @@ import {
     ChromeFilled,
     CrownFilled,
     SmileFilled,
-    TabletFilled,
   } from '@ant-design/icons';
-import MenuList from '../MenuList';
-import { Link, Route, useNavigate } from 'react-router-dom';
 
   
+  // eslint-disable-next-line import/no-anonymous-default-export
   export default {
     route: {
-      path: '/',
+      path: '',
       routes: [
         {
           path: '/welcome',
           name: '欢迎',
-          icon: <SmileFilled />,
-          component: './Welcome',
+          element: '../Welcome',
+          icon: <SmileFilled />
         },
         {
-          path: '/dishadmin',
           name: '菜品管理',
           icon: <CrownFilled />,
-          access: 'canAdmin',
-          component: './Admin',
+          path:'/dish',
           routes: [
             {
-              path: '/admin/sub-page1',
-              name: '一级页面',
+              path: '/dish/dishlist',
+              name: '菜品列表',
               icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
-              component: './Welcome'
+              element: '../Dish/DishList'
             },
             {
-              path: '/admin/sub-page2',
-              name: '二级页面',
+              path: '/dish/dishobject',
+              name: '菜品相关对象',
               icon: <CrownFilled />,
-              component: './Welcome',
-            },
-            {
-              path: '/admin/sub-page3',
-              name: '三级页面',
-              icon: <CrownFilled />,
-              component: './Welcome',
+              element: '../Dish/DishObject'
             },
           ],
         },
         {
-          path: '/',
+          path: '/menulist',
           name: '菜单管理',
-          icon: <CrownFilled />,
-          access: 'canAdmin',
-          component: './Admin',
-          routes: [
-            {
-              path: '/menulist',
-              name: '菜单列表',
-              icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
-            },
-            {
-              path: '/admin/sub-page2',
-              name: '二级页面',
-              icon: <CrownFilled />,
-              component: './Welcome',
-            },
-            {
-              path: '/admin/sub-page3',
-              name: '三级页面',
-              icon: <CrownFilled />,
-              component: './Welcome',
-            },
-          ],
-        },
-        {
-          name: '列表页',
-          icon: <TabletFilled />,
-          path: '/list',
-          component: './ListTableList',
-          routes: [
-            {
-              path: '/list/sub-page',
-              name: '列表页面',
-              icon: <CrownFilled />,
-              routes: [
-                {
-                  path: 'sub-sub-page1',
-                  name: '一一级列表页面',
-                  icon: <CrownFilled />,
-                  component: './Welcome',
-                },
-                {
-                  path: 'sub-sub-page2',
-                  name: '一二级列表页面',
-                  icon: <CrownFilled />,
-                  component: './Welcome',
-                },
-                {
-                  path: 'sub-sub-page3',
-                  name: '一三级列表页面',
-                  icon: <CrownFilled />,
-                  component: './Welcome',
-                },
-              ],
-            },
-            {
-              path: '/list/sub-page2',
-              name: '二级列表页面',
-              icon: <CrownFilled />,
-              component: './Welcome',
-            },
-            {
-              path: '/list/sub-page3',
-              name: '三级列表页面',
-              icon: <CrownFilled />,
-              component: './Welcome',
-            },
-          ],
-        },
+          icon: <ChromeFilled />,
+          element:'../MenuList'
+        }
       ],
     },
     location: {
-      pathname: '/',
+      pathname: '/welcome',
     },
   };
 
