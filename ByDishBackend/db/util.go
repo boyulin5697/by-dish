@@ -80,3 +80,20 @@ func StrToArr(str string) []*string {
 	}
 	return arr
 }
+
+// StrNilCheck 空指针校验
+func StrNilCheck(str *string) string {
+	if str == nil {
+		return ""
+	} else {
+		return *str
+	}
+}
+
+func NumNilCheck(str *int) int {
+	if str == nil {
+		return -1
+	} else {
+		return *str
+	}
+}

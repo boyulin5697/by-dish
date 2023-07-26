@@ -72,46 +72,35 @@ func SearchForDish(dishIn *model.DishInput) *model.Dish {
 
 func SearchForDishList(dishIn *model.DishInput) []*model.Dish {
 	var dishList *[]entities.Dish
-	if dishIn.ID == nil {
-		dishIn.ID = new(string)
-		*dishIn.ID = ""
-	}
-	if dishIn.Name == nil {
-		dishIn.Name = new(string)
-		*dishIn.Name = ""
-	}
-	if dishIn.Pic == nil {
-		dishIn.Pic = new(string)
-		*dishIn.Pic = ""
-	}
-	if dishIn.Avb == nil {
-		dishIn.Avb = new(int)
-		*dishIn.Avb = 0
-	}
-	if dishIn.Freq == nil {
-		dishIn.Freq = new(int)
-		*dishIn.Freq = 0
-	}
-	if dishIn.Description == nil {
-		dishIn.Description = new(string)
-		*dishIn.Description = ""
-	}
-	if dishIn.IntType == nil {
-		dishIn.IntType = new(int)
-		*dishIn.IntType = 0
-	}
-	var dish = entities.Dish{
-		Id:          db.StrToNum(*dishIn.ID),
-		Name:        *dishIn.Name,
-		Description: *dishIn.Description,
-		Pic:         *dishIn.Pic,
-		Freq:        *dishIn.Freq,
-		Type:        *dishIn.IntType,
-		Avb:         *dishIn.Avb,
+	var dish entities.Dish
+	if dishIn.IntType != nil && dishIn.Avb != nil {
+		dish = entities.Dish{
+			Name: db.StrNilCheck(dishIn.Name),
+			Type: db.NumNilCheck(dishIn.IntType),
+			Avb:  db.NumNilCheck(dishIn.Avb),
+		}
+	} else if dishIn.IntType != nil && dishIn.Avb == nil {
+		dish = entities.Dish{
+			Name: db.StrNilCheck(dishIn.Name),
+			Type: db.NumNilCheck(dishIn.IntType),
+			Avb:  1,
+		}
+	} else if dishIn.IntType == nil && dishIn.Avb == nil {
+		dish = entities.Dish{
+			Name: db.StrNilCheck(dishIn.Name),
+			Avb:  1,
+		}
+	} else {
+		dish = entities.Dish{
+			Name: db.StrNilCheck(dishIn.Name),
+			Avb:  db.NumNilCheck(dishIn.Avb),
+		}
 	}
 	var resultList []*model.Dish
 	dishList = dish.FindDishList(*dishIn.PageNo, *dishIn.PageSize)
-	for _, value := range *dishList {
+	dishArr := *dishList
+	for i := 0; i < len(dishArr); i++ {
+		value := dishArr[i]
 		resultList = append(resultList, &model.Dish{
 			ID:          db.NumToStr(value.Id),
 			Name:        &value.Name,
@@ -120,9 +109,9 @@ func SearchForDishList(dishIn *model.DishInput) []*model.Dish {
 			Freq:        &value.Freq,
 			IntType:     &value.Type,
 			Avb:         &value.Avb,
+			Label:       db.StrToArr(dish.Label),
 		})
 	}
-
 	return resultList
 }
 

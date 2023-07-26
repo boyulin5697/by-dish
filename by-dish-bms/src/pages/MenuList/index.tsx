@@ -38,7 +38,6 @@ const columns:ProColumns<Menu>[] = [
 ]
 
 export default function MenuList() {
-
     const[menuData, setMenuData] = useState<Menu[]>([]);
     const expandedRowRender = (data:TDishObjsVal[]) => {
         return (
