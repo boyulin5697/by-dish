@@ -19,8 +19,13 @@ export type Menu = {
 }
 
 export type TDishObjsVal = {
+    dishId:string,
+    objArr:TObjValRel[]
+}
+
+export type TObjValRel = {
     objId:string,
-    objName:string,
-    label:string,
+    objName?:string,
+    label?:string,
     valId:string
 }

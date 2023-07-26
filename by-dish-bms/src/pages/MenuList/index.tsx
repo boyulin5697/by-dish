@@ -5,6 +5,8 @@ import { QUERY_MENU_LIST } from '../../apis';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import NotAvailable from '../NotAvailable';
 import BmsSpinning from '../../components/BmsSpinning';
+import {Button, Modal} from "antd";
+import MenuForm from "./MenuForm";
 
 /**
  * Menu 页面
@@ -34,6 +36,33 @@ const columns:ProColumns<Menu>[] = [
         title:'登记时间',
         width:120,
         dataIndex:'time'
+    },
+    {
+        title:'操作',
+        key:'option',
+        width:80,
+        valueType:'option',
+        render:(_,menu) => {
+            const openDetail = () => {
+              return (
+                <Modal
+                    open={true}
+                    closable={true}
+                >
+                  <MenuForm
+                      id={menu.id}
+                      time={menu.time}
+                      name={menu.name}
+                      list={menu.list}
+                      typeInt={menu.typeInt}
+                  />
+                </Modal>
+              )
+            }
+            return (
+                <Button type="link" onClick={openDetail}>查看详情</Button>
+            )  
+        }
     }
 ]
 
@@ -94,6 +123,7 @@ export default function MenuList() {
                    },
                    rowExpandable:(record) => record.list!==undefined && record.list !== null
                 }}
+
             />
         </div>
     )
