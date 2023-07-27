@@ -26,6 +26,7 @@ input DishObjsVal{
 
 type TDishObjsVal{
     dishId:String!,
+    dishName:String!,
     objArr:[TObjValRel]!
 }
 
@@ -91,16 +92,28 @@ type MutationResponse{
     message:String
 }
 
+type MenuListResponse{
+    pageNo: Int,
+    totalPages: Int,
+    data:[Menu]
+}
+
+type DishListResponse{
+    pageNo: Int,
+    totalPages: Int,
+    data:[Dish]
+}
+
 
 type Query{
     # 查询menu
     menu(input:MenuInput):Menu!
     # 查询menu列表
-    menuList(input:MenuListInput):[Menu]!
+    menuList(input:MenuListInput):MenuListResponse!
     # 查询dish
     dish(input:DishInput):Dish!
     # 查询dish列表
-    dishList(input:DishInput):[Dish]!
+    dishList(input:DishInput):DishListResponse!
     # 获取dish相关的obj和关联列表
     dishObjList(input:String):[ObjValList]!
     #查询obj和关联列表

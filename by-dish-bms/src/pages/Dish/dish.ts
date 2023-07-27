@@ -41,3 +41,8 @@ export type ObjValContent = {
     val:number
 }
 
+export interface DishListResponse{
+    pageNo:number,
+    pageSize:number,
+    data:[Dish]
+}

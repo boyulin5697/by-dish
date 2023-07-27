@@ -32,6 +32,12 @@ type DishInput struct {
 	Objs        []*string `json:"objs,omitempty"`
 }
 
+type DishListResponse struct {
+	PageNo     *int    `json:"pageNo,omitempty"`
+	TotalPages *int    `json:"totalPages,omitempty"`
+	Data       []*Dish `json:"data,omitempty"`
+}
+
 type DishObjsVal struct {
 	DishID string       `json:"dishId"`
 	ObjArr []*ObjValRel `json:"objArr"`
@@ -57,6 +63,12 @@ type MenuListInput struct {
 	Time     *string `json:"time,omitempty"`
 }
 
+type MenuListResponse struct {
+	PageNo     *int    `json:"pageNo,omitempty"`
+	TotalPages *int    `json:"totalPages,omitempty"`
+	Data       []*Menu `json:"data,omitempty"`
+}
+
 type MutationResponse struct {
 	Code    *int    `json:"code,omitempty"`
 	Message *string `json:"message,omitempty"`
@@ -79,8 +91,9 @@ type ObjValRel struct {
 }
 
 type TDishObjsVal struct {
-	DishID string        `json:"dishId"`
-	ObjArr []*TObjValRel `json:"objArr"`
+	DishID   string        `json:"dishId"`
+	DishName string        `json:"dishName"`
+	ObjArr   []*TObjValRel `json:"objArr"`
 }
 
 type TObjValRel struct {

@@ -10,10 +10,17 @@ import './index.css'
  * @date 2023/7/26
  * @constructor
  */
-export default function BmsSpinning() {
+
+export type BmsSpinningProps = {
+    loading?:boolean
+}
+
+export default function BmsSpinning(props:BmsSpinningProps) {
   return (
     <div className='bms-spin'>
-        <Spin size="large" />
+        <Spin size="large"
+              spinning={props.loading==undefined?true:props.loading}
+        />
     </div>
   )
 }

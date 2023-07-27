@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { useQuery } from '@apollo/client';
-import {  QUERY_DISH_LIST } from '../../../apis';
+import React, {useEffect, useState} from 'react'
+import {useLazyQuery, useQuery} from '@apollo/client';
+import {GetLazyPromise, QUERY_DISH_LIST} from '../../../apis';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import NotAvailable from '../../NotAvailable';
 import BmsSpinning from '../../../components/BmsSpinning';
@@ -73,39 +73,73 @@ const columns:ProColumns<Dish>[] = [
 ]
 
 export default function DishList() {
-    const[dishData, setDishData] = useState<Dish[]>([]);
-    const { loading, error, data, refetch} = useQuery(QUERY_DISH_LIST,
-        {
+    const [spin,setSpin] = useState<boolean>(true)
+    const[dishData, setDishData] = useState({
+        page:1,
+        pageSize:10,
+        total:1,
+        dish:[]
+    });
+    const [ getDishList ] = useLazyQuery(QUERY_DISH_LIST)
+
+    useEffect(() => {
+        GetLazyPromise({
             variables:{
                 input:{
-                    pageNo:1,
-                    pageSize:10      
-                }  
-            },
-            onCompleted:(data) => {
-                setDishData(data.dishList)
-                
+                    pageNo:dishData.page,
+                    pageSize:dishData.pageSize
+                }
             }
-        })
-        if(loading){
-            return <BmsSpinning/>
-        }
-        if (error){
+        }, getDishList).then((data:any) => {
+            setDishData({
+                ...dishData,
+                dish:data.dishList.data,
+                page:data.dishList.pageNo,
+                total:data.dishList.totalPages*data.dishList.pageSize,
+            })
+            setSpin(false)
+
+        }).catch((error) => {
+            console.error(error)
             return (
-              <NotAvailable/>
+                <NotAvailable/>
             )
-        }
+        })
+    },[dishData.page,dishData.pageSize])
     
 
     return (
         <div>
+            <div>
+                <BmsSpinning
+                    loading={spin}/>
+            </div>
+            <div>
             <ProTable<Dish>
                 columns={columns}
-                dataSource={dishData}
+                dataSource={dishData.dish}
                 headerTitle={false}
                 search={false}
-                pagination={false}
+                pagination={{
+                    showQuickJumper:true,
+                    defaultCurrent:1,
+                    defaultPageSize:10,
+                    onChange:(page,pageSize) => {
+                        setDishData({
+                            ...dishData,
+                            page,
+                            pageSize
+                        })
+                    },
+                    onShowSizeChange:(_, size) => {
+                        setDishData({
+                            ...dishData,
+                            pageSize: size
+                        })
+                    }
+                }}
             />
+            </div>
         </div>
     )
 }

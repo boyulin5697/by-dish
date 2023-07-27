@@ -29,3 +29,9 @@ export type TObjValRel = {
     label?:string,
     valId:string
 }
+
+export interface MenuListResponse{
+    pageNo:number,
+    pageSize:number,
+    data:[Menu]
+}

@@ -44,7 +44,7 @@ func (r *queryResolver) Menu(ctx context.Context, input *model.MenuInput) (*mode
 }
 
 // MenuList is the resolver for the menuList field.
-func (r *queryResolver) MenuList(ctx context.Context, input *model.MenuListInput) ([]*model.Menu, error) {
+func (r *queryResolver) MenuList(ctx context.Context, input *model.MenuListInput) (*model.MenuListResponse, error) {
 	return service.QueryMenu(input), nil
 }
 
@@ -54,7 +54,7 @@ func (r *queryResolver) Dish(ctx context.Context, input *model.DishInput) (*mode
 }
 
 // DishList is the resolver for the dishList field.
-func (r *queryResolver) DishList(ctx context.Context, input *model.DishInput) ([]*model.Dish, error) {
+func (r *queryResolver) DishList(ctx context.Context, input *model.DishInput) (*model.DishListResponse, error) {
 	return service.SearchForDishList(input), nil
 }
 

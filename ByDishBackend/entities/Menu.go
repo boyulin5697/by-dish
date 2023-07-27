@@ -23,6 +23,7 @@ type MenuValueReceiver struct {
 	Mdoid    string
 	Menuid   string
 	Dishid   string
+	Dishname string
 	Objid    string
 	Content  string
 	Menutime time.Time
@@ -56,8 +57,11 @@ func (menu *Menu) SearchForMenu(id string) *Menu {
 }
 
 // FindMenuList 根据提供的入参分页搜索满足条件的列表
-func (menu *Menu) FindMenuList(pageNo int, pageSize int) *[]Menu {
+func (menu *Menu) FindMenuList(pageNo int, pageSize int) (*[]Menu, int) {
 	var menuList []Menu
+	var total int
 	db.Db.Scopes(db.Paginate(pageNo, pageSize)).Where(&menu).Find(&menuList)
-	return &menuList
+	db.Db.Find(&menu).Offset(-1).Limit(-1).Count(&total)
+	totalPage := db.GetTotalPageNum(pageSize, total)
+	return &menuList, totalPage
 }

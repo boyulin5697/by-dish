@@ -56,8 +56,11 @@ func (dish *Dish) SearchForDish() *Dish {
 }
 
 // FindDishList  根据提供的入参分页搜索满足条件的列表
-func (dish *Dish) FindDishList(pageNo int, pageSize int) *[]Dish {
+func (dish *Dish) FindDishList(pageNo int, pageSize int) (*[]Dish, int) {
 	var dishList []Dish
+	var total int
 	db.Db.Scopes(db.Paginate(pageNo, pageSize)).Where(&dish).Find(&dishList)
-	return &dishList
+	db.Db.Find(&dish).Offset(-1).Limit(-1).Count(&total)
+	totalPage := db.GetTotalPageNum(pageSize, total)
+	return &dishList, totalPage
 }

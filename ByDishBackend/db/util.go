@@ -8,6 +8,7 @@ import (
 
 // utils @author by. in 2023/7/5
 
+// Paginate 分页工具类
 func Paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if page == 0 {
@@ -22,6 +23,19 @@ func Paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 		offset := (page - 1) * pageSize
 		return db.Offset(offset).Limit(pageSize)
 	}
+}
+
+// 获取总页数工具类
+func GetTotalPageNum(pageSize int, totalNum int) int {
+	if pageSize <= 0 {
+		pageSize = 10
+	}
+	if totalNum == 0 {
+		return 0
+	} else {
+		return totalNum/pageSize + 1
+	}
+
 }
 
 func StrToNum(str string) int {

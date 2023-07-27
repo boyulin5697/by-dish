@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import {gql, LazyQueryExecFunction, LazyQueryHookOptions, OperationVariables} from "@apollo/client";
 
 /**
  * 后台管理系统 graphql - apis
@@ -7,6 +7,29 @@ import { gql } from "@apollo/client";
  * @since 2023/7/22
  */
 
+/**
+ * 为懒加载请求封装promise
+ *
+ * @param options 请求入参
+ * @param fn useLazyQuery产生的请求回调函数
+ */
+export const GetLazyPromise = (options:LazyQueryHookOptions, fn:LazyQueryExecFunction<any, OperationVariables>) => {
+    return new Promise((resolve, reject) => {
+        fn(options).then((value) => {
+            if(value.error){
+                reject(value.error)
+            }else{
+                while(value.loading){
+                    console.log("waiting for api loading...")
+                }
+                if(value.data.error!=undefined){
+                    reject(value.data.error[0].message)
+                }
+                resolve(value.data)
+            }
+        })
+    })
+}
 
 /**
  * Add dish request
@@ -39,8 +62,12 @@ export const QUERY_DISH = gql`
 export const QUERY_DISH_LIST = gql`
     query DishList($input:DishInput){
         dishList(input:$input){
-            id,name,pic, freq,intType,
-            description, avb, label
+            pageNo,
+            totalPages,
+            data {
+                id,name,pic, freq,intType,
+                description, avb, label
+            }
         }
     }
 `
@@ -68,6 +95,7 @@ export const QUERY_MENU = gql`
             id,time,
             list{
                 dishId,
+                dishName,
                 objArr{
                     objId,
                     objName,
@@ -87,18 +115,23 @@ export const QUERY_MENU = gql`
 export const QUERY_MENU_LIST = gql`
     query MenuList($input:MenuListInput!){
         menuList(input:$input){
-            id,time,
-            list{
-                dishId,
-                objArr{
-                    objId,
-                    objName,
-                    label,
-                    valId
-                }
-            },
-            typeInt,
-            name
+            pageNo,
+            totalPages,
+            data {
+                id,time,
+                list{
+                    dishId,
+                    dishName,
+                    objArr{
+                        objId,
+                        objName,
+                        label,
+                        valId
+                    }
+                },
+                typeInt,
+                name
+            }
         }
     }
 `

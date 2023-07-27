@@ -12,14 +12,14 @@ import {
   } from '@ant-design/pro-components';
   import { useState } from 'react';
   import defaultProps from './_defaultProps';
+  import defaultsettings from "./defaultsettings";
   import { Link, useRoutes } from 'react-router-dom';
-import { routers } from '../../router';
+  import { routers } from '../../router';
+  import logo from '../../bydish.png'
   
   export default function AppLayout(){
     const router = useRoutes(routers)
-    const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
-      layout: 'side',
-    });
+    const [settings, setSetting] = useState<Partial<ProSettings> | undefined>(defaultsettings);
   
     const [pathname, setPathname] = useState('/welcome');
   
@@ -31,6 +31,8 @@ import { routers } from '../../router';
         }}
       >
         <ProLayout
+          logo={logo}
+          title={"By-Dish BMS"}
           siderWidth={216}
           bgLayoutImgList={[
             {
@@ -70,7 +72,8 @@ import { routers } from '../../router';
             ];
           }}
           menuItemRender={(item, dom) => {
-             setPathname(item.path ?? '/welcome')
+             setPathname(item.path??"")
+             console.log(pathname)
              return( 
                   <Link to={item.path ?? '/welcome'}>
                     {dom}

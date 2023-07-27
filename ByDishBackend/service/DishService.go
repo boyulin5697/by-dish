@@ -70,9 +70,10 @@ func SearchForDish(dishIn *model.DishInput) *model.Dish {
 	return &result
 }
 
-func SearchForDishList(dishIn *model.DishInput) []*model.Dish {
+func SearchForDishList(dishIn *model.DishInput) *model.DishListResponse {
 	var dishList *[]entities.Dish
 	var dish entities.Dish
+	var total int
 	if dishIn.IntType != nil && dishIn.Avb != nil {
 		dish = entities.Dish{
 			Name: db.StrNilCheck(dishIn.Name),
@@ -97,7 +98,7 @@ func SearchForDishList(dishIn *model.DishInput) []*model.Dish {
 		}
 	}
 	var resultList []*model.Dish
-	dishList = dish.FindDishList(*dishIn.PageNo, *dishIn.PageSize)
+	dishList, total = dish.FindDishList(*dishIn.PageNo, *dishIn.PageSize)
 	dishArr := *dishList
 	for i := 0; i < len(dishArr); i++ {
 		value := dishArr[i]
@@ -112,7 +113,11 @@ func SearchForDishList(dishIn *model.DishInput) []*model.Dish {
 			Label:       db.StrToArr(dish.Label),
 		})
 	}
-	return resultList
+	return &model.DishListResponse{
+		PageNo:     dishIn.PageNo,
+		TotalPages: &total,
+		Data:       resultList,
+	}
 }
 
 // DishObjList 获取dish相关obj和关联值

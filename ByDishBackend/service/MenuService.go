@@ -47,15 +47,14 @@ func AddMenu(input *model.AddMenuInput) int {
 }
 
 func FindMenu(id string) *model.Menu {
-	//var menuValList []*entities.MenuValueReceiver
-	//get menu
-	// mdoId, menuId, dishId, objId, content, menuName, menuTime, menuType, objName
 	menuValList := FindMenuObjValues(id)
 	result := new(model.Menu)
 	if menuValList != nil {
 		var molist []*model.TDishObjsVal
+		var finallist []*model.TDishObjsVal
 		var dishObjMap map[string][]*model.TObjValRel
 		dishObjMap = make(map[string][]*model.TObjValRel)
+		var dishNameList []*string
 		for i := range menuValList {
 			if i == 0 {
 				result.ID = menuValList[i].Menuid
@@ -80,7 +79,7 @@ func FindMenu(id string) *model.Menu {
 			tObjValRels = dishObjMap[menuValList[i].Dishid]
 			tObjValRels = append(tObjValRels, moV)
 			dishObjMap[menuValList[i].Dishid] = tObjValRels
-
+			dishNameList = append(dishNameList, &menuValList[i].Dishname)
 		}
 		for s := range dishObjMap {
 			mo := &model.TDishObjsVal{
@@ -89,7 +88,15 @@ func FindMenu(id string) *model.Menu {
 			}
 			molist = append(molist, mo)
 		}
-		result.List = molist
+		for i := 0; i < len(molist); i++ {
+			finalCon := &model.TDishObjsVal{
+				DishID:   molist[i].DishID,
+				DishName: *dishNameList[i],
+				ObjArr:   molist[i].ObjArr,
+			}
+			finallist = append(finallist, finalCon)
+		}
+		result.List = finallist
 	}
 	return result
 }
@@ -111,10 +118,11 @@ func ModifyMenu(id string, lst []string) int {
 	return menu.Save(liststr, id)
 }
 
-func QueryMenu(input *model.MenuListInput) []*model.Menu {
+func QueryMenu(input *model.MenuListInput) *model.MenuListResponse {
 	var menuList *[]entities.Menu
 	var menu = entities.Menu{}
 	var resultList []*model.Menu
+	var totalPage int
 
 	if input.Name != nil {
 		menu.Name = *input.Name
@@ -128,18 +136,23 @@ func QueryMenu(input *model.MenuListInput) []*model.Menu {
 		menu.Type = *input.TypeInt
 	}
 
-	menuList = menu.FindMenuList(input.PageNo, input.PageSize)
+	menuList, totalPage = menu.FindMenuList(input.PageNo, input.PageSize)
 
 	for _, value := range *menuList {
 		resultList = append(resultList, FindMenu(value.Id))
 	}
-	return resultList
+
+	return &model.MenuListResponse{
+		PageNo:     &input.PageNo,
+		TotalPages: &totalPage,
+		Data:       resultList,
+	}
 }
 
 // FindMenuObjValues 获取menu和对象属性相关信息
 func FindMenuObjValues(id string) []*entities.MenuValueReceiver {
 	var objVals []*entities.MenuValueReceiver
-	rows, _ := db.Db.Raw("SELECT mdo_id mdoid, menu_id menuid, dish_id dishid, obj_id objid, content, menu_time menutime, menu_type menutype, menu_name menuname, obj_name objname FROM `v_menu_values` WHERE `menu_id` = ?", id).Rows()
+	rows, _ := db.Db.Raw("SELECT mdo_id mdoid, menu_id menuid, dish_id dishid, dish_name dishname, obj_id objid, content, menu_time menutime, menu_type menutype, menu_name menuname, obj_name objname FROM `v_menu_values` WHERE `menu_id` = ?", id).Rows()
 	for rows.Next() {
 		var obj entities.MenuValueReceiver
 		err := db.Db.ScanRows(rows, &obj)
