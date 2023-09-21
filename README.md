@@ -45,6 +45,6 @@
 
 4. 成品图
 
-![菜单成品](https://seckill-1305486145.cos.ap-guangzhou.myqcloud.com/68f319c2efec441d804d644300fce34e.png)
+![菜单成品](https://seckill-1305486145.cos.ap-guangzhou.myqcloud.com/4c96bcea5a2a43deac521d693c58a55b.jpg)
 
 ![后台管理页面成品](https://seckill-1305486145.cos.ap-guangzhou.myqcloud.com/5968b3626bd04d6ab0362cf040d1ea59.png)
