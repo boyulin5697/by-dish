@@ -24,6 +24,13 @@
     npm run start //启动
 ```
 
+* cust前端：
+
+```shell
+    npm install
+    npm run dev:h5 //h5方式呈现
+```
+
 ### 注意事项
 
 1. 后端可以通过访问 地址：端口/gql/playground方式启动GraphQL交互式api请求平台。
