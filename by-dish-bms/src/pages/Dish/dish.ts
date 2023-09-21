@@ -13,7 +13,8 @@ export type Dish = {
     intType?:number,
     description?:string,
     avb?:number,
-    label?:string[]
+    label?:string[],
+    objs?:string[]
 }
 
 export interface DishInput{
@@ -46,3 +47,25 @@ export interface DishListResponse{
     pageSize:number,
     data:[Dish]
 }
+
+export type ObjectValue = {
+    objid:number,
+    objname:string,
+    valid?:number,
+    val?:number,
+    label?:string
+}
+
+export type Object = {
+    id:number,
+    name:string,
+}
+
+export type QueryDishObjects = {
+    objid:number
+}
+
+export type DishObj = {
+    dishid:string,
+    dishList:Object[]
+} | undefined

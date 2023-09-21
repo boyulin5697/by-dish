@@ -4,6 +4,8 @@ import (
 	"ByDishBackend/db"
 )
 
+// Label 暂时可能没准备用上 @author by.
+
 type Label struct {
 	Id   int    `json:"id"`
 	Name string `json:"name"`

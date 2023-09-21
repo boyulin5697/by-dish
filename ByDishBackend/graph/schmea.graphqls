@@ -14,7 +14,8 @@ type Dish{
     intType: Int,
     description:String,
     avb:Int,
-    label:[String]
+    label:[String],
+    objs:[String]
 }
 
 input DishObjsVal{
@@ -87,6 +88,10 @@ input MenuListInput{
     time:String
 }
 
+input QueryDishObjects{
+    objid:Int
+}
+
 type MutationResponse{
     code:Int,
     message:String
@@ -104,8 +109,62 @@ type DishListResponse{
     data:[Dish]
 }
 
+type ObjectValue{
+    objid:Int!,
+    objname:String!,
+    valid:Int,
+    val:Int,
+    label:String!
+}
 
+type Object{
+    id:Int!,
+    name:String!,
+}
+
+type DishObj{
+    dishid:String!,
+    dishList:[Object]
+}
+
+type TypeObject{
+    typeid:Int!,
+    label:String!
+}
+
+input CustDishInput{
+    typeidList:[Int]!,
+    # 入参数值代表最终查询结果的模式，暂定1-为按照热度排序，2-按照新奇排序（没有点过的）
+    wish:Int
+
+}
+
+type TypeDishObject{
+    typeid:Int!,
+    # 默认dish查询结果为15条
+    dishes:[Dish]!
+}
+
+input CustAddMenuInput{
+    dishList:[DishObjsVal]!
+}
+
+input TypeInput{
+    typeName:String!
+}
+
+###### 面向用户端的接口需要 加上Cust前缀 ######
 type Query{
+
+    # 通用接口
+
+    # 获取obj和关联列表
+    objValList(input:QueryDishObjects):[ObjectValue]!
+    # 请求菜品类别列表:
+    custTypeList:[TypeObject]!
+
+    # A端方向
+
     # 查询menu
     menu(input:MenuInput):Menu!
     # 查询menu列表
@@ -114,17 +173,34 @@ type Query{
     dish(input:DishInput):Dish!
     # 查询dish列表
     dishList(input:DishInput):DishListResponse!
-    # 获取dish相关的obj和关联列表
-    dishObjList(input:String):[ObjValList]!
-    #查询obj和关联列表
-    objList:[ObjValContent]!
+    # 获取dish相关的obj
+    dishObjList(input:[String]):[DishObj]!
+    # 获取全部obj列表
+    objList:[Object]!
+
+    # C端方向
+
+    # 请求某标签下的菜品列表
+    custDishList(input:CustDishInput):[TypeDishObject]!
+
 }
 
+###### 面向用户端的接口需要 加上Cust前缀 ######
 type Mutation{
+
+    # A端方向
+
     # 添加menu
     addMenu(input:AddMenuInput):MutationResponse
     # 添加dish
     addDish(input:DishInput):MutationResponse
     # 更新dish
     updateDish(input:DishInput):MutationResponse
+    # 添加品类
+    addType(input:TypeInput):MutationResponse
+
+    # C端方向
+
+    # 添加Menu
+    custAddMenu(input:CustAddMenuInput):MutationResponse
 }

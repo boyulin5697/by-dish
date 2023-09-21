@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {Menu, TDishObjsVal} from './menu'
-import {LazyQueryHookOptions, useLazyQuery} from '@apollo/client';
+import {useLazyQuery} from '@apollo/client';
 import {GetLazyPromise, QUERY_MENU_LIST} from '../../apis';
 import {ProColumns, ProTable} from '@ant-design/pro-components';
-import {Button, Modal} from "antd";
-import MenuForm from "./MenuForm";
+import MenuForm, {MenuFormRef} from "./MenuForm";
 import BmsSpinning from "../../components/BmsSpinning";
 import NotAvailable from "../NotAvailable";
+import {Button} from "antd";
 
 /**
  * Menu 页面
@@ -15,78 +15,70 @@ import NotAvailable from "../NotAvailable";
  * @date 2023/7/23
  */
 
-const columns:ProColumns<Menu>[] = [
-    {
-        title:'菜单编号',
-        width: 120,
-        dataIndex: 'id',
-    },
-    {
-        title:'菜单名',
-        width:120,
-        dataIndex:'name',
-    
-    },
-    {
-        title:'菜单类型',
-        width:120,
-        dataIndex:'typeInt'
-    },
-    {
-        title:'登记时间',
-        width:120,
-        dataIndex:'time'
-    },
-    {
-        title:'操作',
-        key:'option',
-        width:80,
-        valueType:'option',
-        render:(_,menu) => {
-            const openDetail = () => {
-              return (
-                <Modal
-                    open={true}
-                    closable={true}
-                >
-                  <MenuForm
-                      id={menu.id}
-                      time={menu.time}
-                      name={menu.name}
-                      list={menu.list}
-                      typeInt={menu.typeInt}
-                  />
-                </Modal>
-              )
-            }
-            return (
-                <Button type="link" onClick={openDetail}>查看详情</Button>
-            )  
-        }
-    }
-]
-
 export default function MenuList() {
+    // const currentMenuData = useRef<Menu>()
+
+    let menuArray:Menu[]=[]
+    const menuModelRef = useRef<MenuFormRef>(null)
     const[menuData, setMenuData] = useState({
         page:1,
         pageSize:10,
         total:1,
-        menu:[]
+        menu:menuArray
     });
     const [spin,setSpin] = useState<boolean>(true)
     const [getMenuList, { loading, error }] = useLazyQuery(QUERY_MENU_LIST)
 
-    const expandedRowRender = (data:TDishObjsVal[]) => {
+    //定义表头
+    const columns:ProColumns<Menu>[] = [
+        {
+            title:'菜单编号',
+            width: 120,
+            dataIndex: 'id',
+        },
+        {
+            title:'菜单名',
+            width:120,
+            dataIndex:'name',
+
+        },
+        {
+            title:'菜单类型',
+            width:120,
+            dataIndex:'typeInt'
+        },
+        {
+            title:'登记时间',
+            width:120,
+            dataIndex:'time'
+        },
+        {
+            title:'操作',
+            key:'option',
+            width:80,
+            valueType:'option',
+            render:(node, menu) => {
+                return (
+                    <Button type="link"
+                            style={{color:"#13C2C2"}}
+                            onClick={()=>{
+                                menuModelRef.current?.showModel(menu)
+                            }}
+                    >查看详情</Button>
+                )
+            }
+        }
+    ]
+
+    const expandedRowRender = (data:TDishObjsVal[], dishId:string) => {
         return (
           <ProTable
             columns={[
-                { title:'菜编号', dataIndex:'dishId', key:'dishId'},
-                { title:'菜品名', dataIndex:'dishName', key:'dishName'},
-                // { title: '对象编号', dataIndex: 'objId', key: 'objId' },
-                // { title: '对象名', dataIndex: 'objName', key: 'objName' },
-                // { title: '值标签', dataIndex: 'upgradeNum', key: 'upgradeNum' },
+                { title:'菜编号', dataIndex:'dishId', key:dishId+'dishId'},
+                { title:'菜品名', dataIndex:'dishName', key:dishId+'dishName'},
                 // { hideInTable:true, title: '值编号', dataIndex: 'valId', key: 'valId'}
             ]}
+            key={dishId+"dishes"}
             headerTitle={false}
             search={false}
             options={false}
@@ -97,6 +89,7 @@ export default function MenuList() {
       };
 
     useEffect(() => {
+        setSpin(true)
         GetLazyPromise({
             variables:{
                 input:{
@@ -109,7 +102,7 @@ export default function MenuList() {
                 ...menuData,
                 menu:data.menuList.data,
                 page:data.menuList.pageNo,
-                total:data.menuList.totalPages*data.menuList.pageSize,
+                total:data.menuList.totalPages,
             })
             setSpin(false)
 
@@ -121,15 +114,17 @@ export default function MenuList() {
         })
     },[menuData.page,menuData.pageSize])
 
+
     return (
         <div>
             <div>
                 <BmsSpinning
                  loading={spin}/>
             </div>
-            <div>
+            <MenuForm ref={menuModelRef}></MenuForm>
             <ProTable<Menu>
                 columns={columns}
+                rowKey="id"
                 dataSource={menuData.menu}
                 headerTitle={false}
                 search={false}
@@ -137,6 +132,7 @@ export default function MenuList() {
                     showQuickJumper:true,
                     defaultCurrent:1,
                     defaultPageSize:10,
+                    total:menuData.total,
                     onChange:(page,pageSize) => {
                         setMenuData({
                             ...menuData,
@@ -153,13 +149,12 @@ export default function MenuList() {
                 }}
                 expandable={{
                    expandedRowRender:(record) => {
-                        return expandedRowRender(record.list)
+                        return expandedRowRender(record.list, record.id)
                    },
                    rowExpandable:(record) => record.list!==undefined && record.list !== null
                 }}
 
             />
-            </div>
         </div>
     )
 }

@@ -35,7 +35,6 @@ func (r *mutationResolver) UpdateDish(ctx context.Context, input *model.DishInpu
 	return &model.MutationResponse{
 		Code: &code, Message: &resp,
 	}, nil
-
 }
 
 // Menu is the resolver for the menu field.
@@ -59,13 +58,38 @@ func (r *queryResolver) DishList(ctx context.Context, input *model.DishInput) (*
 }
 
 // DishObjList is the resolver for the dishObjList field.
-func (r *queryResolver) DishObjList(ctx context.Context, input *string) ([]*model.ObjValList, error) {
+func (r *queryResolver) DishObjList(ctx context.Context, input []*string) ([]*model.DishObj, error) {
 	return service.DishObjList(input), nil
 }
 
 // ObjList is the resolver for the objList field.
-func (r *queryResolver) ObjList(ctx context.Context) ([]*model.ObjValContent, error) {
-	return service.GetObjectList(), nil
+func (r *queryResolver) ObjList(ctx context.Context) ([]*model.Object, error) {
+	return service.GetObjectBasicList(), nil
+}
+
+// ObjValList is the resolver for the objList field.
+func (r *queryResolver) ObjValList(ctx context.Context, input *model.QueryDishObjects) ([]*model.ObjectValue, error) {
+	return service.GetObjectList(input), nil
+}
+
+// CustTypeList is the resolver for the custTypeList field.
+func (r *queryResolver) CustTypeList(ctx context.Context) ([]*model.TypeObject, error) {
+	return service.GetTypeList(), nil
+}
+
+// CustDishList is the resolver for the custDishList field.
+func (r *queryResolver) CustDishList(ctx context.Context, input *model.CustDishInput) ([]*model.TypeDishObject, error) {
+	return service.GetDishesByType(input), nil
+}
+
+// CustAddMenu is the resolver for the custAddMenu field.
+func (r *mutationResolver) CustAddMenu(ctx context.Context, input *model.CustAddMenuInput) (*model.MutationResponse, error) {
+	return service.CustAddMenu(input), nil
+}
+
+// AddType is the resolver for the addType field.
+func (r *mutationResolver) AddType(ctx context.Context, input *model.TypeInput) (*model.MutationResponse, error) {
+	return service.AddType(input), nil
 }
 
 // Mutation returns MutationResolver implementation.

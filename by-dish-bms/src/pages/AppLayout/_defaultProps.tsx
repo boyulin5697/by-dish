@@ -4,8 +4,7 @@ import {
     SmileFilled,
   } from '@ant-design/icons';
 
-  
-  // eslint-disable-next-line import/no-anonymous-default-export
+
   export default {
     route: {
       path: '',
@@ -33,6 +32,12 @@ import {
               icon: <CrownFilled />,
               element: '../Dish/DishObject'
             },
+            {
+              path:'/dish/adddish',
+              name:'添加菜品',
+              icon: <CrownFilled/>,
+              element:'../Dish/AddDishPage'
+            }
           ],
         },
         {

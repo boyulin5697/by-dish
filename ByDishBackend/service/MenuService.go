@@ -10,9 +10,10 @@ import (
 	"time"
 )
 
-//Menu service
+//// bms(A) 端 menu相关接口服务
 //@author by. Created in 2023/6/20
 
+// AddMenu 添加menu
 func AddMenu(input *model.AddMenuInput) int {
 	time := time.Now()
 	id, err := uuid.NewUUID()
@@ -46,6 +47,7 @@ func AddMenu(input *model.AddMenuInput) int {
 	return menu.AddMenu()
 }
 
+// FindMenu 找到menu
 func FindMenu(id string) *model.Menu {
 	menuValList := FindMenuObjValues(id)
 	result := new(model.Menu)
@@ -55,6 +57,7 @@ func FindMenu(id string) *model.Menu {
 		var dishObjMap map[string][]*model.TObjValRel
 		dishObjMap = make(map[string][]*model.TObjValRel)
 		var dishNameList []*string
+		preDishId := "0"
 		for i := range menuValList {
 			if i == 0 {
 				result.ID = menuValList[i].Menuid
@@ -79,7 +82,13 @@ func FindMenu(id string) *model.Menu {
 			tObjValRels = dishObjMap[menuValList[i].Dishid]
 			tObjValRels = append(tObjValRels, moV)
 			dishObjMap[menuValList[i].Dishid] = tObjValRels
-			dishNameList = append(dishNameList, &menuValList[i].Dishname)
+			// 当dishid发生变化时才往列表中添加新的dish名
+			if preDishId == "0" {
+				dishNameList = append(dishNameList, &menuValList[i].Dishname)
+			} else if menuValList[i].Dishid != preDishId {
+				dishNameList = append(dishNameList, &menuValList[i].Dishname)
+			}
+			preDishId = menuValList[i].Dishid
 		}
 		for s := range dishObjMap {
 			mo := &model.TDishObjsVal{
@@ -101,11 +110,13 @@ func FindMenu(id string) *model.Menu {
 	return result
 }
 
+// DeleteMenu 删除menu
 func DeleteMenu(id string) int {
 	var menu *entities.Menu
 	return menu.Delete(id)
 }
 
+// ModifyMenu 修改menu
 func ModifyMenu(id string, lst []string) int {
 	var menu *entities.Menu
 	liststr := ""
@@ -118,6 +129,7 @@ func ModifyMenu(id string, lst []string) int {
 	return menu.Save(liststr, id)
 }
 
+// QueryMenu 查询menu
 func QueryMenu(input *model.MenuListInput) *model.MenuListResponse {
 	var menuList *[]entities.Menu
 	var menu = entities.Menu{}

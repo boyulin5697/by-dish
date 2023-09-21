@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -8,7 +8,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 //config graphql server
 const client = new ApolloClient({
-  uri: 'http://localhost:8080/bydish/gql',
+  //uri: 'http://localhost:19200/bydish/gql',
+  uri:'http://api.boyulin.cn/bydish/gql',
   cache: new InMemoryCache(),
 });
 

@@ -7,6 +7,15 @@ type AddMenuInput struct {
 	DishList []*DishObjsVal `json:"dishList"`
 }
 
+type CustAddMenuInput struct {
+	DishList []*DishObjsVal `json:"dishList"`
+}
+
+type CustDishInput struct {
+	TypeidList []*int `json:"typeidList"`
+	Wish       *int   `json:"wish,omitempty"`
+}
+
 type Dish struct {
 	ID          string    `json:"id"`
 	Name        *string   `json:"name,omitempty"`
@@ -16,6 +25,7 @@ type Dish struct {
 	Description *string   `json:"description,omitempty"`
 	Avb         *int      `json:"avb,omitempty"`
 	Label       []*string `json:"label,omitempty"`
+	Objs        []*string `json:"objs,omitempty"`
 }
 
 type DishInput struct {
@@ -36,6 +46,11 @@ type DishListResponse struct {
 	PageNo     *int    `json:"pageNo,omitempty"`
 	TotalPages *int    `json:"totalPages,omitempty"`
 	Data       []*Dish `json:"data,omitempty"`
+}
+
+type DishObj struct {
+	Dishid   string    `json:"dishid"`
+	DishList []*Object `json:"dishList,omitempty"`
 }
 
 type DishObjsVal struct {
@@ -90,6 +105,23 @@ type ObjValRel struct {
 	ValID string `json:"valId"`
 }
 
+type Object struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+type ObjectValue struct {
+	Objid   int    `json:"objid"`
+	Objname string `json:"objname"`
+	Valid   *int   `json:"valid,omitempty"`
+	Val     *int   `json:"val,omitempty"`
+	Label   string `json:"label"`
+}
+
+type QueryDishObjects struct {
+	Objid *int `json:"objid,omitempty"`
+}
+
 type TDishObjsVal struct {
 	DishID   string        `json:"dishId"`
 	DishName string        `json:"dishName"`
@@ -101,4 +133,18 @@ type TObjValRel struct {
 	ObjName *string `json:"objName,omitempty"`
 	Label   *string `json:"label,omitempty"`
 	ValID   string  `json:"valId"`
+}
+
+type TypeDishObject struct {
+	Typeid int     `json:"typeid"`
+	Dishes []*Dish `json:"dishes"`
+}
+
+type TypeInput struct {
+	TypeName string `json:"typeName"`
+}
+
+type TypeObject struct {
+	Typeid int    `json:"typeid"`
+	Label  string `json:"label"`
 }

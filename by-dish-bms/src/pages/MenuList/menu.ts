@@ -20,6 +20,7 @@ export type Menu = {
 
 export type TDishObjsVal = {
     dishId:string,
+    dishName:string,
     objArr:TObjValRel[]
 }
 
@@ -35,3 +36,5 @@ export interface MenuListResponse{
     pageSize:number,
     data:[Menu]
 }
+
+

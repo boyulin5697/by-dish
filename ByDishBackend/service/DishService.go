@@ -6,6 +6,9 @@ import (
 	"ByDishBackend/graph/model"
 )
 
+// bms(A) 端dish相关接口服务 @author by.
+
+// AddDish 添加dish
 func AddDish(dish *model.DishInput) int {
 	if dish.Pic == nil {
 		dish.Pic = new(string)
@@ -23,6 +26,10 @@ func AddDish(dish *model.DishInput) int {
 		dish.Description = new(string)
 		*dish.Description = ""
 	}
+	if dish.IntType == nil {
+		dish.IntType = new(int)
+		*dish.IntType = 13
+	}
 	if dish.Objs == nil {
 		return -1
 	}
@@ -33,6 +40,7 @@ func AddDish(dish *model.DishInput) int {
 		Freq:        *dish.Freq,
 		Description: *dish.Description,
 		Avb:         *dish.Avb,
+		Type:        *dish.IntType,
 		Label:       db.ArrToStr(dish.Label),
 		Objs:        db.ArrToStr(dish.Objs),
 	}
@@ -40,6 +48,7 @@ func AddDish(dish *model.DishInput) int {
 	return newdish.AddDish()
 }
 
+// UpdateDish 更新dish
 func UpdateDish(dish *model.DishInput) int {
 	newdish := &entities.Dish{
 		Id:          db.StrToNum(*dish.ID),
@@ -53,6 +62,7 @@ func UpdateDish(dish *model.DishInput) int {
 	return newdish.Save()
 }
 
+// SearchForDish 搜索dish
 func SearchForDish(dishIn *model.DishInput) *model.Dish {
 	dish := entities.Dish{
 		Id: db.StrToNum(*dishIn.ID),
@@ -66,10 +76,12 @@ func SearchForDish(dishIn *model.DishInput) *model.Dish {
 		Description: &dish.Description,
 		Avb:         &dish.Avb,
 		Label:       db.StrToArr(dish.Label),
+		Objs:        db.StrToArr(dish.Objs),
 	}
 	return &result
 }
 
+// SearchForDishList 搜索dish列表
 func SearchForDishList(dishIn *model.DishInput) *model.DishListResponse {
 	var dishList *[]entities.Dish
 	var dish entities.Dish
@@ -110,7 +122,8 @@ func SearchForDishList(dishIn *model.DishInput) *model.DishListResponse {
 			Freq:        &value.Freq,
 			IntType:     &value.Type,
 			Avb:         &value.Avb,
-			Label:       db.StrToArr(dish.Label),
+			Label:       db.StrToArr(value.Label),
+			Objs:        db.StrToArr(value.Objs),
 		})
 	}
 	return &model.DishListResponse{
@@ -121,25 +134,33 @@ func SearchForDishList(dishIn *model.DishInput) *model.DishListResponse {
 }
 
 // DishObjList 获取dish相关obj和关联值
-func DishObjList(id *string) []*model.ObjValList {
-	if id != nil {
-		objs := GetDishObjList(*id)
-		resultList := new([]*model.ObjValList)
-		if objs != nil {
-			for _, obj := range objs {
-				objVal := &model.ObjValList{
-					ObjID:   *obj,
-					ValList: getDishObj(*obj),
+func DishObjList(ids []*string) []*model.DishObj {
+	if ids != nil {
+		var finalResult []*model.DishObj
+		for _, id := range ids {
+			objs := GetDishObjList(*id)
+			objList := entities.GetObjListByIds(objs)
+			var finObjList []*model.Object
+			for _, object := range objList {
+				finObj := model.Object{
+					ID:   object.Id,
+					Name: object.Name,
 				}
-				*resultList = append(*resultList, objVal)
+				finObjList = append(finObjList, &finObj)
 			}
+			result := model.DishObj{
+				Dishid:   *id,
+				DishList: finObjList,
+			}
+			finalResult = append(finalResult, &result)
 		}
-		return *resultList
+		return finalResult
 	} else {
 		return nil
 	}
 }
 
+// GetDishObjList 根据dish获取其关联objects
 func GetDishObjList(id string) []*string {
 	dish := &entities.Dish{Id: db.StrToNum(id)}
 	dish = dish.SearchForDish()
@@ -152,23 +173,23 @@ func GetDishObjList(id string) []*string {
 }
 
 // GetDishObj 获取dish相关对象数组
-func getDishObj(id string) []*model.ObjValContent {
-	var obj []*model.ObjValContent
-	rows, _ := db.Db.Raw("SELECT val_id valid, name, label, val FROM `v_obj_values` WHERE `id` = ?", id).Rows()
-	for rows.Next() {
-		var objItem model.ObjValContent
-		err := db.Db.ScanRows(rows, &objItem)
-		if err != nil {
-			return nil
-		}
-		obj = append(obj, &objItem)
-	}
-	return obj
-}
+//func getDishObj(id string) []*model.ObjValContent {
+//	var obj []*model.ObjValContent
+//	rows, _ := db.Db.Raw("SELECT val_id valid, name, label, val FROM `v_obj_values` WHERE `id` = ?", id).Rows()
+//	for rows.Next() {
+//		var objItem model.ObjValContent
+//		err := db.Db.ScanRows(rows, &objItem)
+//		if err != nil {
+//			return nil
+//		}
+//		obj = append(obj, &objItem)
+//	}
+//	return obj
+//}
 
 // GetDishObj 获取展示用菜品对象
-func getShowDishObj(id string) []*model.TObjValRel {
-	var obj = new([]*model.TObjValRel)
-	db.Db.Raw("SELECT val_id valID, id ObjId, name objName, label FROM `v_obj_values` WHERE `id` = ?", id).Scan(&obj)
-	return *obj
-}
+//func getShowDishObj(id string) []*model.TObjValRel {
+//	var obj = new([]*model.TObjValRel)
+//	db.Db.Raw("SELECT val_id valID, id ObjId, name objName, label FROM `v_obj_values` WHERE `id` = ?", id).Scan(&obj)
+//	return *obj
+//}

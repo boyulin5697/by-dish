@@ -1,4 +1,5 @@
 import {gql, LazyQueryExecFunction, LazyQueryHookOptions, OperationVariables} from "@apollo/client";
+import {DishInput} from "./pages/Dish/dish";
 
 /**
  * 后台管理系统 graphql - apis
@@ -35,7 +36,7 @@ export const GetLazyPromise = (options:LazyQueryHookOptions, fn:LazyQueryExecFun
  * Add dish request
  */
 export const ADD_DISH = gql`
-    mutation AddDish($input:AddDishInput!){
+    mutation AddDish($input:DishInput!){
         addDish(input:$input){
             code,
             message
@@ -66,7 +67,7 @@ export const QUERY_DISH_LIST = gql`
             totalPages,
             data {
                 id,name,pic, freq,intType,
-                description, avb, label
+                description, avb, label,objs
             }
         }
     }
@@ -75,12 +76,12 @@ export const QUERY_DISH_LIST = gql`
  * Query Dish related objects and
  */
 export const QUERY_DISH_OBJS = gql`
-    query DishObjList($input:String!){
+    query DishObjList($input:[String]!){
         dishObjList(input:$input){
-            objId,
-            valList{
-                valid
-                label,
+            dishid,
+            dishList{
+                id,
+                name
             }
         }
     }
@@ -135,3 +136,35 @@ export const QUERY_MENU_LIST = gql`
         }
     }
 `
+
+export const QUERY_OBJ_LIST = gql`
+    query objList{
+        objList{
+            id,
+            name
+        }
+    }
+`
+
+export const QUERY_OBJ_VAL_LIST = gql`
+    query ObjValList($input:QueryDishObjects){
+        objValList(input:$input){
+            objid,
+            objname,
+            valid,
+            val,
+            label
+        }
+    }
+`
+
+export const QUERY_TYPE_LIST = gql`
+    query{
+        custTypeList{
+            typeid,
+            label
+        }
+    }
+`
+
+

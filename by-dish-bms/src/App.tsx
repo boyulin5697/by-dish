@@ -1,7 +1,6 @@
 import './App.css';
 import AppLayout from './pages/AppLayout';
 
-function App() {
+export default function App() {
   return <AppLayout/>
 }
-export default App;

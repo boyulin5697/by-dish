@@ -4,6 +4,7 @@ import (
 	"ByDishBackend/config"
 	"ByDishBackend/db"
 	"ByDishBackend/mainRouter"
+	"github.com/gin-gonic/gin"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/vo"
@@ -18,7 +19,7 @@ func main() {
 	//服务注册端口和地址
 	serverConfigs := []constant.ServerConfig{
 		{
-			IpAddr: "120.26.84.76",
+			IpAddr: "",
 			Port:   8848,
 		},
 	}
@@ -39,8 +40,8 @@ func main() {
 	)
 
 	success, err := client.RegisterInstance(vo.RegisterInstanceParam{
-		Ip:          "127.0.0.1",
-		Port:        8080,
+		Ip:          "", //ip地址修改为部署服务器的公网ip
+		Port:        19200,
 		ServiceName: "by-dish",
 		Weight:      10,
 		Enable:      true,
@@ -52,7 +53,7 @@ func main() {
 		log.Fatalln(err.Error())
 		return
 	} else {
-		log.Print("[NACOS] CONNECT TO NACOS SUCCEEDED...")
+		log.Print("[NACOS] CONNECT TO NACOS SUCCESSFULLY...")
 		configClient, err := clients.CreateConfigClient(map[string]interface{}{
 			"serverConfigs": serverConfigs,
 			"clientConfigs": clientConfig,
@@ -76,5 +77,7 @@ func main() {
 			},
 		})
 	}
-	_ = router.Run()
+	// 上生产前解除注释
+	gin.SetMode("release")
+	_ = router.Run(":19200")
 }

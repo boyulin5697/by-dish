@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+// Menu 菜单 @author by. since 2023/5/1
+
 type Menu struct {
 	Id   string    `json:"id"`
 	Time time.Time `json:"time"`
@@ -61,7 +63,7 @@ func (menu *Menu) FindMenuList(pageNo int, pageSize int) (*[]Menu, int) {
 	var menuList []Menu
 	var total int
 	db.Db.Scopes(db.Paginate(pageNo, pageSize)).Where(&menu).Find(&menuList)
-	db.Db.Find(&menu).Offset(-1).Limit(-1).Count(&total)
-	totalPage := db.GetTotalPageNum(pageSize, total)
-	return &menuList, totalPage
+	db.Db.Model(&menu).Count(&total)
+	//totalPage := db.GetTotalPageNum(pageSize, total)
+	return &menuList, total
 }

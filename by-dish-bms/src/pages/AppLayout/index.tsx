@@ -16,12 +16,20 @@ import {
   import { Link, useRoutes } from 'react-router-dom';
   import { routers } from '../../router';
   import logo from '../../bydish.png'
+import useAuth from "../../hooks/Auth";
+import Login from "../Login";
   
   export default function AppLayout(){
     const router = useRoutes(routers)
+    const { token } = useAuth()
     const [settings, setSetting] = useState<Partial<ProSettings> | undefined>(defaultsettings);
   
     const [pathname, setPathname] = useState('/welcome');
+    if(token == ""){
+        return (
+            <Login/>
+        )
+    }
   
     return (
       <div
@@ -58,6 +66,7 @@ import {
           location={{
             pathname,
           }}
+
           avatarProps={{
             src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
             title: '七妮妮',
@@ -73,7 +82,6 @@ import {
           }}
           menuItemRender={(item, dom) => {
              setPathname(item.path??"")
-             console.log(pathname)
              return( 
                   <Link to={item.path ?? '/welcome'}>
                     {dom}
@@ -85,7 +93,7 @@ import {
           <PageContainer>
             <ProCard
               style={{
-                height: '90vh',
+                height: '300vh',
                 minHeight: 500,
               }}
             >

@@ -1,15 +1,13 @@
 import { ReactNode, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
-import { JSX } from "react/jsx-runtime";
 import MenuList from "../pages/MenuList";
-import App from "../App";
-import { Menu } from "antd";
-import AppLayout from "../pages/AppLayout";
 import NotFound from "../pages/NotFound";
 import NotAvailable from "../pages/NotAvailable";
 import DishList from "../pages/Dish/DishList";
 import DishObject from "../pages/Dish/DishObjects";
 import Welcome from "../pages/Welcome";
+import Login from "../pages/Login";
+import AddDishPage from "../pages/Dish/AddDishPage";
 
 // 实现懒加载的用Suspense包裹 定义函数
 const lazyLoad = (children: ReactNode): ReactNode =>{
@@ -21,8 +19,12 @@ const lazyLoad = (children: ReactNode): ReactNode =>{
 export const routers:RouteObject[] = [
     {
       path:'/',
-      element:'/welcome',
+      element:lazyLoad(<Welcome/>)
       //name:'欢迎使用'
+    },
+    {
+        path:'/login',
+        element: lazyLoad(<Login/>)
     },
     {
       path: 'menulist',
@@ -38,6 +40,10 @@ export const routers:RouteObject[] = [
         {
           path:'dishobject',
           element: lazyLoad(<DishObject/>)
+        },
+        {
+            path:'adddish',
+            element:lazyLoad(<AddDishPage/>)
         }
       ]
     },

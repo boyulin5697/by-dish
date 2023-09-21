@@ -9,6 +9,7 @@ import (
 
 var Db *gorm.DB
 
+// Init 初始化数据库
 func Init() {
 	var err error
 	config := config2.GetDBConfig()

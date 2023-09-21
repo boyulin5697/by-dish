@@ -8,7 +8,7 @@
 
 * ByDishBackend 项目后端，基于Go+Gin+gorm+MySQL+GraphQL，项目配置管理基于Nacos服务注册/配置中心
 
-* 仍在开发中，敬请期待
+* by-dish-cust 项目前端，基于taro+GraphQL
 
 ### 项目启动方式
 
@@ -42,3 +42,9 @@
 3. （如果这个项目真被其他人看到的话）有问题的话欢迎提Issues
 
 *最重要的事：* 本人能力有限，go、Vue、React等技术也刚接触未久，项目粗陋，有很多混乱或不符合常规开发模式的地方请见谅，
+
+4. 成品图
+
+![菜单成品](https://seckill-1305486145.cos.ap-guangzhou.myqcloud.com/68f319c2efec441d804d644300fce34e.png)
+
+![后台管理页面成品](https://seckill-1305486145.cos.ap-guangzhou.myqcloud.com/5968b3626bd04d6ab0362cf040d1ea59.png)
