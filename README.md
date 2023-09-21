@@ -48,3 +48,13 @@
 ![菜单成品](https://seckill-1305486145.cos.ap-guangzhou.myqcloud.com/4c96bcea5a2a43deac521d693c58a55b.jpg)
 
 ![后台管理页面成品](https://seckill-1305486145.cos.ap-guangzhou.myqcloud.com/5968b3626bd04d6ab0362cf040d1ea59.png)
+
+5. 支持功能
+
+(1) 与nacos注册中心对接，提供可配置化的数据源。
+(2) 支持自由添加菜品和菜品配置（即自由选择是否控制甜度、咸度等等）
+(3) 支持下单后自动推送邮件通知
+
+
+6. 其他
+如需SQL脚本，可以提issue告诉我联系方式
